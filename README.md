@@ -6,6 +6,12 @@
 - **Category:** Software — Blockchain & Cybersecurity
 - **Core Ask:** Design a system to de-anonymize threat actors operating on dark web marketplaces and forums, linking pseudonymous personas to each other (and potentially to real-world identities) across platforms.
 
+## Quick Start (Podman / Docker)
+This project is fully containerized for a 1-click deployment during the SIH evaluation. We recommend using **Podman**, a daemonless, open-source alternative to Docker.
+1. Install [Podman](https://podman.io/) and `podman-compose`.
+2. Run `podman-compose up --build` in your terminal at the root of this project.
+3. Open `http://localhost` in your browser to view the interactive Threat Intelligence Dashboard.
+
 ## Problem Statement Description
 Threat actors — cybercriminals, narcotics/weapons traders, fraud operators — rely on pseudonymous personas across dark web forums and marketplaces to evade attribution. Law enforcement and intelligence agencies currently lack scalable tools to link these personas across platforms without expensive network-level infrastructure (e.g., Tor traffic correlation, which requires access most investigators don't have). This PS asks for an alternative approach: correlate identity signals that *are* accessible — writing style, cryptocurrency wallet reuse, timing patterns, key reuse — to build confidence-scored links between personas.
 

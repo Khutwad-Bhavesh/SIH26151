@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTRO De-anonymization Command Center</title>
+    <!-- Google Fonts for Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Cytoscape for Graph Rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="pulse-ring"></div>
+                <h1>NTRO <span>De-Anon Engine</span></h1>
+            </div>
+            
+            <div class="control-panel">
+                <h3>Analysis Controls</h3>
+                <button id="btn-run-scan" class="btn-primary">Execute OSINT Scan</button>
+                <div class="status-indicator">
+                    <span id="scan-status">System Standby</span>
+                </div>
+            </div>
+
+            <div class="metrics-panel">
+                <h3>Graph Metrics</h3>
+                <div class="metric">
+                    <span>Identities Found:</span>
+                    <span id="metric-nodes" class="highlight">0</span>
+                </div>
+                <div class="metric">
+                    <span>Evidence Links:</span>
+                    <span id="metric-edges" class="highlight">0</span>
+                </div>
+            </div>
+
+            <div class="evidence-panel" id="evidence-panel" style="display: none;">
+                <h3>Link Evidence</h3>
+                <div class="evidence-card">
+                    <p class="evidence-label">Connection Type:</p>
+                    <p id="evidence-reason" class="evidence-value">--</p>
+                    <p class="evidence-label">Confidence Weight:</p>
+                    <p id="evidence-weight" class="evidence-value">--</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Graph Area -->
+        <main class="graph-container">
+            <div id="cy"></div>
+            <div id="overlay" class="overlay">
+                <h2>Initialize scan to render identity graph.</h2>
+            </div>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
