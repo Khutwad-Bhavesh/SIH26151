@@ -76,7 +76,7 @@ class GraphBuilder:
         return G
 
     @staticmethod
-    def format_for_cytoscape(G: nx.Graph, target=None) -> dict:
+    def format_for_cytoscape(G: nx.Graph, df: pd.DataFrame, target=None) -> dict:
         """Runs Louvain clustering and formats for frontend consumption."""
         partition = louvain.best_partition(G, random_state=42)
 
@@ -90,7 +90,25 @@ class GraphBuilder:
             target_cluster = partition[matched_author]
             partition = {k: v for k, v in partition.items() if v == target_cluster}
 
-        nodes = [{"data": {"id": author, "label": author, "cluster": cluster_id}} for author, cluster_id in partition.items()]
+        nodes = []
+        for author, cluster_id in partition.items():
+            author_df = df[df['author'] == author]
+            
+            # Extract metadata (first non-null value for each)
+            pgp = author_df['pgp'].dropna().iloc[0] if 'pgp' in author_df.columns and not author_df['pgp'].dropna().empty else "UNKNOWN"
+            btc = author_df['btc'].dropna().iloc[0] if 'btc' in author_df.columns and not author_df['btc'].dropna().empty else "UNKNOWN"
+            gpu = author_df['gpu_timing_hash'].dropna().iloc[0] if 'gpu_timing_hash' in author_df.columns and not author_df['gpu_timing_hash'].dropna().empty else "UNKNOWN"
+            
+            nodes.append({
+                "data": {
+                    "id": author,
+                    "label": author,
+                    "cluster": cluster_id,
+                    "pgp": pgp,
+                    "btc": btc,
+                    "gpu": gpu
+                }
+            })
         
         edges = []
         for u, v, data in G.edges(data=True):

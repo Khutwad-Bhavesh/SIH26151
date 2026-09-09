@@ -218,11 +218,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const target = cy.getElementById(edge.data('target')).data('label');
             const weight = parseFloat(edge.data('weight'));
 
-            // Populate Dossier
+            // Populate Dossier Header
+            document.querySelector('#evidence-panel h3').textContent = "LINK ANALYSIS";
             targetLink.textContent = `${source} ↔ ${target}`;
-            evidenceWeight.textContent = weight.toFixed(2);
             
+            // Restore Score HTML structure
+            document.querySelector('.dossier-section:nth-child(2) h4').textContent = "FUSION SCORE";
+            document.querySelector('.score-display').innerHTML = `<span id="evidence-weight" class="weight-value">${weight.toFixed(2)}</span><span class="weight-label">/ 10.0</span>`;
+            
+            const evidenceWeight = document.getElementById("evidence-weight");
             const badge = document.getElementById("confidence-badge");
+            
             if (weight > 6) {
                 badge.textContent = "CRITICAL MATCH";
                 badge.style.color = "var(--secondary-neon)";
@@ -241,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Render Reasons
+            document.querySelector('.dossier-section:nth-child(3) h4').textContent = "CORROBORATING EVIDENCE";
             const rawReason = edge.data('reason');
             if (rawReason.includes(' | ')) {
                 const reasonsList = rawReason.split(' | ').map(r => `<li>${r}</li>`).join('');
@@ -253,13 +260,36 @@ document.addEventListener("DOMContentLoaded", () => {
             evidencePanel.classList.add("show");
         });
 
+        cy.on('tap', 'node', function(evt){
+            const node = evt.target;
+            const data = node.data();
+            
+            // Populate Dossier for Node
+            document.querySelector('#evidence-panel h3').textContent = "TARGET PROFILE";
+            targetLink.textContent = `ID: ${data.label}`;
+            
+            const badge = document.getElementById("confidence-badge");
+            badge.textContent = `CLUSTER ID: ${data.cluster}`;
+            badge.style.color = "var(--primary-neon)";
+            badge.style.borderColor = "var(--primary-neon)";
+            
+            // Show PGP Key
+            document.querySelector('.dossier-section:nth-child(2) h4').textContent = "PRIMARY PGP KEY";
+            document.querySelector('.score-display').innerHTML = `<span class="weight-value" style="font-size: 14px; word-break: break-all; color: var(--primary-neon);">${data.pgp}</span>`;
+            
+            // Show Identifiers
+            document.querySelector('.dossier-section:nth-child(3) h4').textContent = "KNOWN IDENTIFIERS";
+            evidenceReason.innerHTML = `<ul style="font-size: 13px; color: var(--primary-text);">
+                <li style="margin-bottom: 8px;"><strong>BTC:</strong> <span style="font-family: monospace;">${data.btc}</span></li>
+                <li><strong>GPU Hash:</strong> <span style="font-family: monospace;">${data.gpu}</span></li>
+            </ul>`;
+            
+            evidencePanel.classList.add("show");
+        });
+        
         btnCloseDossier.addEventListener("click", () => {
             evidencePanel.classList.remove("show");
             cy.elements().unselect();
-        });
-
-        cy.on('tap', 'node', function(){
-            evidencePanel.classList.remove("show");
         });
         
         cy.on('tap', function(evt){
