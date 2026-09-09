@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         overlay.style.opacity = 0;
 
         try {
-            // Fetch data from FastAPI Backend
-            const response = await fetch("http://localhost:8000/api/graph");
+            // Fetch data from FastAPI Backend (Relative URL for deployment portability)
+            const response = await fetch("/api/graph");
             const result = await response.json();
             
             if (result.status === "success") {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     selector: 'edge',
                     style: {
-                        'width': 'mapData(weight, 0, 3, 1, 5)',
+                        'width': 'mapData(weight, 0, 8, 1, 6)',
                         'line-color': 'var(--secondary-neon)',
                         'curve-style': 'bezier',
                         'opacity': 0.6
@@ -109,7 +109,16 @@ document.addEventListener("DOMContentLoaded", () => {
         cy.on('tap', 'edge', function(evt){
             const edge = evt.target;
             evidencePanel.style.display = 'block';
-            evidenceReason.textContent = edge.data('reason');
+            
+            // Handle fused multi-signal reasons
+            const rawReason = edge.data('reason');
+            if (rawReason.includes(' | ')) {
+                const reasonsList = rawReason.split(' | ').map(r => `<li>${r}</li>`).join('');
+                evidenceReason.innerHTML = `<ul>${reasonsList}</ul>`;
+            } else {
+                evidenceReason.innerHTML = rawReason;
+            }
+            
             evidenceWeight.textContent = parseFloat(edge.data('weight')).toFixed(2);
         });
 

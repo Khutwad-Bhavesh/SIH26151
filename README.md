@@ -43,7 +43,7 @@ Threat actors — cybercriminals, narcotics/weapons traders, fraud operators —
 | Wallet extraction | Regex, Etherscan / Blockchain.com APIs (cross-reference) |
 | Backend | FastAPI |
 | Frontend / Visualization | React + D3.js or Cytoscape.js |
-| Storage | PostgreSQL or Neo4j (graph-native) |
+| Storage | In-Memory Processing (Neo4j / PostgreSQL ready) |
 
 ## USP & Unique Idea
 Most teams that attempt a "dark web" PS will lean on a single weak signal (usually just text similarity) and call it attribution. Our differentiator is **multi-signal confidence fusion** — no single technique proves a link, but combining stylometry + wallet reuse + timing correlation into a calibrated score mirrors how real threat-intel analysts actually work.

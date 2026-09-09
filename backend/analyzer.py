@@ -58,14 +58,26 @@ def build_graph(df):
     for author in df['author'].unique():
         G.add_node(author)
 
-    # Add edges based on Hard Identifiers (BTC, PGP)
+    # Accumulate evidence
+    # edge_evidence[ (u, v) ] = {'weight': 0.0, 'reasons': []}
+    edge_evidence = {}
+
+    def add_evidence(u, v, weight, reason):
+        # ensure deterministic ordering
+        pair = tuple(sorted([u, v]))
+        if pair not in edge_evidence:
+            edge_evidence[pair] = {'weight': 0.0, 'reasons': []}
+        edge_evidence[pair]['weight'] += weight
+        edge_evidence[pair]['reasons'].append(reason)
+
+    # Hard Identifiers (BTC, PGP)
     if 'btc' in df.columns:
         for btc in df['btc'].dropna().unique():
             authors = df[df['btc'] == btc]['author'].unique()
             if len(authors) > 1:
                 for i in range(len(authors)):
                     for j in range(i+1, len(authors)):
-                        G.add_edge(authors[i], authors[j], weight=2.0, reason='Shared BTC Address')
+                        add_evidence(authors[i], authors[j], 2.0, 'Shared BTC Address')
 
     if 'pgp' in df.columns:
         for pgp in df['pgp'].dropna().unique():
@@ -73,54 +85,52 @@ def build_graph(df):
             if len(authors) > 1:
                 for i in range(len(authors)):
                     for j in range(i+1, len(authors)):
-                        if not G.has_edge(authors[i], authors[j]):
-                            G.add_edge(authors[i], authors[j], weight=2.0, reason='Shared PGP Key')
+                        add_evidence(authors[i], authors[j], 2.0, 'Shared PGP Key')
 
-    # Add edges based on Hardware Fingerprints (Remote GPU Timing)
+    # Hardware Fingerprints (Remote GPU Timing)
     if 'gpu_timing_hash' in df.columns:
         for gpu in df['gpu_timing_hash'].dropna().unique():
             authors = df[df['gpu_timing_hash'] == gpu]['author'].unique()
             if len(authors) > 1:
                 for i in range(len(authors)):
                     for j in range(i+1, len(authors)):
-                        if not G.has_edge(authors[i], authors[j]):
-                            G.add_edge(authors[i], authors[j], weight=2.5, reason='Remote GPU Timing Signature Match')
+                        add_evidence(authors[i], authors[j], 2.5, 'Remote GPU Timing Signature Match')
 
-    # Add edges based on Temporal Correlation (Sleep Schedule Profiling)
+    # Temporal Correlation (Sleep Schedule Profiling)
     if 'median_active_hour' in df.columns:
         authors = df['author'].unique()
         for i in range(len(authors)):
             for j in range(i+1, len(authors)):
-                if G.has_edge(authors[i], authors[j]):
-                    continue 
-                
-                # If median active hours are within 1 hour of each other, they share a timezone/sleep schedule
                 hour_i = df[df['author'] == authors[i]]['median_active_hour'].iloc[0]
                 hour_j = df[df['author'] == authors[j]]['median_active_hour'].iloc[0]
                 
                 if abs(hour_i - hour_j) <= 1.5:
-                    G.add_edge(authors[i], authors[j], weight=1.5, reason=f'Temporal Correlation: Shared Active Hours (UTC {hour_i:.1f})')
+                    add_evidence(authors[i], authors[j], 1.5, f'Temporal Correlation: Shared Active Hours (UTC {hour_i:.1f})')
 
-    # Add edges based on Stylistic Similarity (Cosine threshold)
+    # Stylistic Similarity (Cosine threshold)
     if 'embedding' in df.columns:
         authors = df['author'].unique()
         for i in range(len(authors)):
             for j in range(i+1, len(authors)):
-                if G.has_edge(authors[i], authors[j]):
-                    continue 
-                
                 emb_i = df[df['author'] == authors[i]]['embedding'].mean(axis=0)
                 emb_j = df[df['author'] == authors[j]]['embedding'].mean(axis=0)
                 
                 sim = cosine_similarity([emb_i], [emb_j])[0][0]
                 if sim > 0.15:
-                    G.add_edge(authors[i], authors[j], weight=sim, reason=f'Stylometric Similarity ({sim:.2f})')
+                    add_evidence(authors[i], authors[j], sim, f'Stylometric Similarity ({sim:.2f})')
+
+    # Build the final graph from fused evidence
+    for (u, v), data in edge_evidence.items():
+        # Deduplicate reasons just in case
+        unique_reasons = list(set(data['reasons']))
+        reason_str = " | ".join(unique_reasons)
+        G.add_edge(u, v, weight=data['weight'], reason=reason_str)
 
     return G
 
 def format_cytoscape_json(G):
-    # Community Detection
-    partition = louvain.best_partition(G)
+    # Community Detection (with random_state for deterministic output)
+    partition = louvain.best_partition(G, random_state=42)
 
     # Construct JSON output
     nodes = []
