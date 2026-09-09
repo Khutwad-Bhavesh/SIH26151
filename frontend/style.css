@@ -184,6 +184,29 @@ h3 {
     padding-bottom: 8px;
 }
 
+.target-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--glass-border);
+    color: var(--primary-neon);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.target-input::placeholder {
+    color: rgba(0, 240, 255, 0.3);
+}
+
+.target-input:focus {
+    border-color: var(--primary-neon);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
 .btn-primary {
     width: 100%;
     background: rgba(0, 240, 255, 0.05);

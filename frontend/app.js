@@ -76,15 +76,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cy) { cy.destroy(); cy = null; }
         evidencePanel.classList.remove("show");
 
+        // Read target input
+        const targetInput = document.getElementById("target-input").value.trim();
+        const targetName = targetInput ? `[${targetInput}]` : "BROAD NETWORK";
+
         // Staged delay to simulate heavy processing
         terminalLog.innerHTML = "";
-        logToTerminal("INITIATING SCAN SEQUENCE...", "normal");
+        
+        if (targetInput) {
+            logToTerminal(`TARGET LOCK: ${targetName}`, "warn");
+            logToTerminal(`ISOLATING TARGET FOOTPRINT...`, "normal");
+        } else {
+            logToTerminal("EXECUTING BROAD NETWORK SWEEP...", "normal");
+        }
         
         const scanSteps = [
-            { msg: "Extracting PGP & BTC Signatures...", delay: 800 },
-            { msg: "Computing stylometric embeddings...", delay: 1500 },
-            { msg: "Running temporal correlation...", delay: 2200 },
-            { msg: "Fusing confidence signals...", delay: 2900 }
+            { msg: `Extracting Signatures for ${targetName}...`, delay: 800 },
+            { msg: `Computing stylometric embeddings...`, delay: 1500 },
+            { msg: `Running temporal correlation...`, delay: 2200 },
+            { msg: `Fusing confidence signals...`, delay: 2900 }
         ];
 
         scanSteps.forEach(step => {
