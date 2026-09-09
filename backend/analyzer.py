@@ -87,7 +87,7 @@ def build_graph(df):
                     for j in range(i+1, len(authors)):
                         add_evidence(authors[i], authors[j], 2.0, 'Shared PGP Key')
 
-    # Hardware Fingerprints (Remote GPU Timing)
+    # Hardware Fingerprints (Remote GPU Timing & Monitor Resolution)
     if 'gpu_timing_hash' in df.columns:
         for gpu in df['gpu_timing_hash'].dropna().unique():
             authors = df[df['gpu_timing_hash'] == gpu]['author'].unique()
@@ -95,6 +95,14 @@ def build_graph(df):
                 for i in range(len(authors)):
                     for j in range(i+1, len(authors)):
                         add_evidence(authors[i], authors[j], 2.5, 'Remote GPU Timing Signature Match')
+
+    if 'monitor' in df.columns:
+        for monitor in df['monitor'].dropna().unique():
+            authors = df[df['monitor'] == monitor]['author'].unique()
+            if len(authors) > 1:
+                for i in range(len(authors)):
+                    for j in range(i+1, len(authors)):
+                        add_evidence(authors[i], authors[j], 1.0, 'Shared Monitor Resolution')
 
     # Temporal Correlation (Sleep Schedule Profiling)
     if 'median_active_hour' in df.columns:
@@ -121,8 +129,8 @@ def build_graph(df):
 
     # Build the final graph from fused evidence
     for (u, v), data in edge_evidence.items():
-        # Deduplicate reasons just in case
-        unique_reasons = list(set(data['reasons']))
+        # Deduplicate reasons using dict.fromkeys() to maintain deterministic insertion order
+        unique_reasons = list(dict.fromkeys(data['reasons']))
         reason_str = " | ".join(unique_reasons)
         G.add_edge(u, v, weight=data['weight'], reason=reason_str)
 
