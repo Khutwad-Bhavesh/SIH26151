@@ -15,13 +15,13 @@ app.add_middleware(
 )
 
 @app.get("/api/graph")
-def get_identity_graph():
+def get_identity_graph(target: str = None):
     """
     Runs the OSINT pipeline and returns the Identity Graph (Nodes + Edges)
     formatted for Cytoscape.js.
     """
     try:
-        graph_data = generate_graph_data()
+        graph_data = generate_graph_data(target)
         return {"status": "success", "data": graph_data}
     except Exception as e:
         return {"status": "error", "message": str(e)}

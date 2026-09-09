@@ -136,9 +136,21 @@ def build_graph(df):
 
     return G
 
-def format_cytoscape_json(G):
+def format_cytoscape_json(G, target=None):
     # Community Detection (with random_state for deterministic output)
     partition = louvain.best_partition(G, random_state=42)
+
+    # Target Filtering Logic: Isolate the target's entire criminal syndicate
+    if target:
+        target_lower = target.lower()
+        matched_author = next((author for author in partition if author.lower() == target_lower), None)
+        
+        if not matched_author:
+            raise ValueError(f"Target '{target}' not found in the database.")
+            
+        target_cluster = partition[matched_author]
+        # Keep only nodes in the exact same Louvain cluster
+        partition = {k: v for k, v in partition.items() if v == target_cluster}
 
     # Construct JSON output
     nodes = []
@@ -154,22 +166,24 @@ def format_cytoscape_json(G):
         })
 
     for u, v, data in G.edges(data=True):
-        edges.append({
-            "data": {
-                "source": u,
-                "target": v,
-                "weight": data['weight'],
-                "reason": data['reason']
-            }
-        })
+        # Only add edges where both nodes are in our filtered partition
+        if u in partition and v in partition:
+            edges.append({
+                "data": {
+                    "source": u,
+                    "target": v,
+                    "weight": data['weight'],
+                    "reason": data['reason']
+                }
+            })
 
     return {"nodes": nodes, "edges": edges}
 
-def generate_graph_data():
+def generate_graph_data(target=None):
     """Main pipeline execution for the API."""
     df = get_default_data()
     df = extract_entities(df)
     df = compute_stylometry(df)
     df = compute_temporal_correlation(df) # NEW LAYER: Timezone profiling
     G = build_graph(df)
-    return format_cytoscape_json(G)
+    return format_cytoscape_json(G, target=target)

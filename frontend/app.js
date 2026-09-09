@@ -105,7 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(async () => {
             try {
                 logToTerminal("Fetching Graph Data...", "normal");
-                const response = await fetch("/api/graph");
+                const url = targetInput ? `/api/graph?target=${encodeURIComponent(targetInput)}` : "/api/graph";
+                const response = await fetch(url);
                 const result = await response.json();
                 
                 if (result.status === "success") {
@@ -120,15 +121,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         const totalWeight = result.data.edges.reduce((sum, e) => sum + e.data.weight, 0);
                         const avg = totalWeight / result.data.edges.length;
                         metricConfidence.textContent = (avg * 10).toFixed(1) + "%";
+                    } else {
+                        metricConfidence.textContent = "0.0%";
                     }
                 } else {
                     throw new Error(result.message);
                 }
             } catch (error) {
                 console.error(error);
-                logToTerminal("SYSTEM ERROR: API OFFLINE", "warn");
-                overlay.style.opacity = 1;
-                overlay.innerHTML = `<div class="waiting-box"><h2>API ERROR</h2><p>Connection Refused</p></div>`;
+                let errMsg = error.message;
+                if (errMsg.includes("not found")) {
+                    logToTerminal(`ERROR: TARGET [${targetInput}] NOT IN DATABASE`, "warn");
+                    overlay.style.opacity = 1;
+                    overlay.innerHTML = `<div class="waiting-box"><h2>TARGET NOT FOUND</h2><p>No footprint exists for ${targetInput}</p></div>`;
+                } else {
+                    logToTerminal("SYSTEM ERROR: API OFFLINE", "warn");
+                    overlay.style.opacity = 1;
+                    overlay.innerHTML = `<div class="waiting-box"><h2>API ERROR</h2><p>Connection Refused</p></div>`;
+                }
             } finally {
                 btnRunScan.disabled = false;
                 btnRunScan.querySelector('.btn-text').textContent = "INITIALIZE OSINT SCAN";
