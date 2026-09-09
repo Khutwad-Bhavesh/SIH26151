@@ -156,36 +156,34 @@ document.addEventListener("DOMContentLoaded", () => {
                     selector: 'node',
                     style: {
                         'background-color': function(ele) {
-                            const palette = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
-                            const cid = ele.data('cluster');
-                            return (cid !== undefined && cid >= 0) ? palette[cid % palette.length] : '#1e293b';
+                            // Assign distinct neon colors based on cluster ID
+                            const colors = ['#00f0ff', '#22C55E', '#ff003c', '#f59e0b', '#a855f7'];
+                            return colors[ele.data('cluster') % colors.length];
                         },
                         'border-width': 2,
-                        'border-color': 'rgba(255,255,255,0.8)',
-                        'label': 'data(label)',
-                        'color': '#f8fafc',
-                        'font-family': 'JetBrains Mono',
-                        'font-size': '14px',
-                        'font-weight': 'bold',
-                        'text-valign': 'bottom',
-                        'text-margin-y': 10,
-                        'width': 45,
-                        'height': 45,
-                        'text-outline-color': '#050810',
-                        'text-outline-width': 3
+                        'border-color': '#ffffff',
+                        'label': 'data(id)',
+                        'color': '#F8FAFC',
+                        'font-family': "'Fira Code', monospace",
+                        'font-size': '12px',
+                        'text-valign': 'top',
+                        'text-halign': 'center',
+                        'text-margin-y': -8,
+                        'text-outline-color': '#020617',
+                        'text-outline-width': 3,
+                        'width': 24,
+                        'height': 24,
+                        'transition-property': 'background-color, border-color, transform',
+                        'transition-duration': '0.3s'
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': 'mapData(weight, 0, 8, 2, 8)',
-                        'line-color': function(ele) {
-                            // High confidence = green, low = dim blue
-                            return ele.data('weight') > 4 ? 'var(--high-conf)' : 'rgba(0, 240, 255, 0.4)';
-                        },
+                        'width': 'mapData(weight, 1, 10, 2, 8)',
+                        'line-color': '#1E293B',
                         'curve-style': 'bezier',
                         'opacity': 0.8,
-                        'line-style': 'dashed',
                         'line-dash-pattern': [10, 5],
                         'line-dash-offset': 0
                     }

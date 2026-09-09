@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NTRO De-anonymization Command Center</title>
-    <!-- Google Fonts for Premium Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Masterpiece Typography: Fira Code & Fira Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Cytoscape for Graph Rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -55,17 +55,19 @@
 
                 <div class="metrics-panel glass-panel">
                     <h3>Global Metrics</h3>
-                    <div class="metric">
-                        <span>Identities Tracked</span>
-                        <span id="metric-nodes" class="highlight glow">0</span>
-                    </div>
-                    <div class="metric">
-                        <span>Correlations Found</span>
-                        <span id="metric-edges" class="highlight glow">0</span>
-                    </div>
-                    <div class="metric">
-                        <span>Confidence Avg</span>
-                        <span id="metric-confidence" class="highlight glow">0%</span>
+                    <div class="bento-grid">
+                        <div class="bento-box">
+                            <span class="bento-label">Identities</span>
+                            <span id="metric-nodes" class="bento-value glow">0</span>
+                        </div>
+                        <div class="bento-box">
+                            <span class="bento-label">Correlations</span>
+                            <span id="metric-edges" class="bento-value glow">0</span>
+                        </div>
+                        <div class="bento-box full-width">
+                            <span class="bento-label">Avg Confidence</span>
+                            <span id="metric-confidence" class="bento-value glow">0.0%</span>
+                        </div>
                     </div>
                 </div>
             </aside>
