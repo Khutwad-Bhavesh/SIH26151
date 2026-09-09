@@ -156,45 +156,41 @@ document.addEventListener("DOMContentLoaded", () => {
                     selector: 'node',
                     style: {
                         'background-color': function(ele) {
-                            // Assign distinct neon colors based on cluster ID
-                            const colors = ['#00f0ff', '#22C55E', '#ff003c', '#f59e0b', '#a855f7'];
+                            // Assign solid colors for nodes
+                            const colors = ['#00E5FF', '#FFB300', '#00E676', '#FFFFFF'];
                             return colors[ele.data('cluster') % colors.length];
                         },
-                        'border-width': 2,
-                        'border-color': '#ffffff',
+                        'border-width': 1,
+                        'border-color': '#000000',
                         'label': 'data(id)',
-                        'color': '#F8FAFC',
+                        'color': '#FFFFFF',
                         'font-family': "'Fira Code', monospace",
-                        'font-size': '12px',
+                        'font-size': '10px',
                         'text-valign': 'top',
                         'text-halign': 'center',
                         'text-margin-y': -8,
-                        'text-outline-color': '#020617',
-                        'text-outline-width': 3,
-                        'width': 24,
-                        'height': 24,
-                        'transition-property': 'background-color, border-color, transform',
-                        'transition-duration': '0.3s'
+                        'text-outline-color': '#000000',
+                        'text-outline-width': 2,
+                        'width': 20,
+                        'height': 20,
+                        'shape': 'ellipse'
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': 'mapData(weight, 1, 10, 2, 8)',
-                        'line-color': '#1E293B',
+                        'width': 'mapData(weight, 1, 10, 1, 4)',
+                        'line-color': '#333333',
                         'curve-style': 'bezier',
-                        'opacity': 0.8,
-                        'line-dash-pattern': [10, 5],
-                        'line-dash-offset': 0
+                        'opacity': 1.0,
+                        'line-style': 'solid'
                     }
                 },
                 {
-                    selector: 'node:selected',
+                    selector: 'edge.highlighted',
                     style: {
-                        'border-width': 4,
-                        'border-color': 'var(--primary-neon)',
-                        'shadow-blur': 15,
-                        'shadow-color': 'var(--primary-neon)'
+                        'line-color': '#00E5FF',
+                        'width': 2
                     }
                 }
             ],
