@@ -54,11 +54,18 @@ function resize() {
     maskCtx.fillRect(0, 0, width, height);
     
     maskCtx.fillStyle = 'black';
+    maskCtx.strokeStyle = 'black';
+    maskCtx.lineJoin = 'round';
+    
     // Dynamically size font based on width
-    maskCtx.font = `bold ${Math.min(width / 6, 250)}px "IBM Plex Sans", sans-serif`;
+    const fontSize = Math.min(width / 6, 250);
+    maskCtx.lineWidth = fontSize * 0.15; // Thick stroke for bubble effect
+    maskCtx.font = `900 ${fontSize}px "Arial Rounded MT Bold", "Comic Sans MS", "IBM Plex Sans", sans-serif`;
     maskCtx.textAlign = 'center';
     maskCtx.textBaseline = 'middle';
+    
     // Move slightly up since the dashboard UI covers the bottom
+    maskCtx.strokeText('A.T.L.A.S.', width / 2, height / 2 - 50);
     maskCtx.fillText('A.T.L.A.S.', width / 2, height / 2 - 50);
     
     const maskData = maskCtx.getImageData(0, 0, width, height).data;
