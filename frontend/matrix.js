@@ -58,9 +58,9 @@ function resize() {
     maskCtx.lineJoin = 'round';
     
     // Dynamically size font based on width
-    const fontSize = Math.min(width / 6, 250);
-    maskCtx.lineWidth = fontSize * 0.15; // Thick stroke for bubble effect
-    maskCtx.font = `900 ${fontSize}px "Arial Rounded MT Bold", "Comic Sans MS", "IBM Plex Sans", sans-serif`;
+    const maskFontSize = Math.min(width / 6, 250);
+    maskCtx.lineWidth = maskFontSize * 0.15; // Thick stroke for bubble effect
+    maskCtx.font = `900 ${maskFontSize}px "Arial Rounded MT Bold", "Comic Sans MS", "IBM Plex Sans", sans-serif`;
     maskCtx.textAlign = 'center';
     maskCtx.textBaseline = 'middle';
     
