@@ -245,18 +245,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     selector: 'node',
                     style: {
-                        'background-color': function(ele) {
-                        'background-color': '#8A93A3', // fog
-                        'label': 'data(label)',
-                        'color': '#EDEDEC', // paper
+                        'background-color': '#8A93A3',
+                        'label': 'data(id)',
+                        'color': '#EDEDEC',
                         'font-size': '12px',
                         'font-family': 'IBM Plex Mono',
                         'text-valign': 'bottom',
                         'text-margin-y': '6px',
-                        'text-outline-color': '#0D1013', // ink
+                        'text-outline-color': '#0D1013',
                         'text-outline-width': 2,
-                        'border-color': '#171B21', // panel
-                        'border-width': 1
+                        'border-color': '#171B21',
+                        'border-width': 1,
+                        'width': 20,
+                        'height': 20,
+                        'shape': 'ellipse'
                     }
                 },
                 {
