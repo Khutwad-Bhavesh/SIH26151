@@ -25,6 +25,12 @@ class ElasticsearchConnector:
             {"post_id": 102, "author": "AlphaFox", "forum": "MarketAlpha", "content": "Market closing down. Thanks for the money.", "infrastructure_id": "SRV-NGINX-SSH-99X8", "risk_level": "Critical", "associated_malware": "FoxStealer", "domains": "alphafox.onion", "timestamp": "2020-05-01T12:00:00Z"},
             {"post_id": 103, "author": "DarkFox", "forum": "DreadForum", "content": "I am opening a new market. New PGP: 1111 2222 3333 4444", "infrastructure_id": "SRV-NGINX-SSH-99X8", "risk_level": "Critical", "associated_malware": "FoxStealer_v2", "domains": "darkfox.onion", "timestamp": "2021-03-01T12:00:00Z"},
             {"post_id": 104, "author": "FoxX", "forum": "DreadForum", "content": "Rebranded to FoxX for better OPSEC. New keys: FFFF EEEE DDDD CCCC", "infrastructure_id": "SRV-NGINX-SSH-99X8", "risk_level": "Critical", "associated_malware": "FoxStealer_v3", "domains": "foxx.onion", "timestamp": "2023-08-01T12:00:00Z"},
+            
+            # The Lux Takedown Target
+            {"post_id": 201, "author": "Lux", "forum": "HiddenAnswers", "content": "Looking to buy bulk BTC mixing services. Will pay premium.", "infrastructure_id": "SRV-LUX-01", "risk_level": "Critical", "associated_malware": "None", "domains": "luxmarket.onion", "timestamp": "2023-01-15T09:30:00Z"},
+            {"post_id": 202, "author": "Lux", "forum": "DreadForum", "content": "Escrow services available. 5% fee. PGP: 99AB 88CD 77EF 66GH", "infrastructure_id": "SRV-LUX-01", "risk_level": "Critical", "associated_malware": "None", "domains": "luxmarket.onion", "timestamp": "2023-04-22T14:15:00Z"},
+            {"post_id": 203, "author": "LuxAdmin", "forum": "MarketB", "content": "Server maintenance window in 2 hours. Use backup onion link.", "infrastructure_id": "SRV-LUX-01", "risk_level": "Critical", "associated_malware": "None", "domains": "luxbackup.onion", "timestamp": "2023-09-10T11:00:00Z"},
+            {"post_id": 204, "author": "AnonCoder", "forum": "DreadForum", "content": "Vouching for Lux. Sent 10 BTC, received clean coins back.", "infrastructure_id": "SRV-SB-01", "risk_level": "Critical", "associated_malware": "ZeroDay.exe", "domains": "exploit.onion", "timestamp": "2023-09-15T16:20:00Z"}
         ]
 
     def query(self, target=None):
