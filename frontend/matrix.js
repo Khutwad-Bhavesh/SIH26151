@@ -30,6 +30,11 @@ const config = {
 const bufferCanvas = document.createElement('canvas');
 const bufferCtx = bufferCanvas.getContext('2d');
 
+// Offscreen buffer for the text mask
+const maskCanvas = document.createElement('canvas');
+const maskCtx = maskCanvas.getContext('2d', { willReadFrequently: true });
+let maskData = null;
+
 function resize() {
     width = canvas.width = bufferCanvas.width = window.innerWidth;
     height = canvas.height = bufferCanvas.height = window.innerHeight;
@@ -40,6 +45,22 @@ function resize() {
     // Fill buffer with dark initially
     bufferCtx.fillStyle = '#0D1013';
     bufferCtx.fillRect(0, 0, width, height);
+    
+    // Create text mask
+    maskCanvas.width = width;
+    maskCanvas.height = height;
+    maskCtx.fillStyle = 'white';
+    maskCtx.fillRect(0, 0, width, height);
+    
+    maskCtx.fillStyle = 'black';
+    // Dynamically size font based on width
+    maskCtx.font = `bold ${Math.min(width / 6, 250)}px "IBM Plex Sans", sans-serif`;
+    maskCtx.textAlign = 'center';
+    maskCtx.textBaseline = 'middle';
+    // Move slightly up since the dashboard UI covers the bottom
+    maskCtx.fillText('A.T.L.A.S.', width / 2, height / 2 - 50);
+    
+    maskData = maskCtx.getImageData(0, 0, width, height).data;
 }
 window.addEventListener('resize', resize);
 resize();
@@ -81,20 +102,40 @@ function drawMatrix() {
     bufferCtx.textAlign = 'center';
 
     for (let i = 0; i < columns.length; i++) {
-        // Random binary char
-        const char = config.charSet[Math.floor(Math.random() * config.charSet.length)];
+        const x = i * fontSize;
+        const y = columns[i] * fontSize;
         
-        // Sometimes draw a bright white head character
-        if (Math.random() > 0.8) {
-            bufferCtx.fillStyle = "#FFFFFF";
-            bufferCtx.fillText(char, i * fontSize, columns[i] * fontSize);
-            bufferCtx.fillStyle = config.tint;
+        // Check if current position is inside the text mask
+        let isInsideText = false;
+        if (maskData && y >= 0 && y < height && x >= 0 && x < width) {
+            const pixelIndex = (Math.floor(y) * width + Math.floor(x)) * 4;
+            // Mask is black/white, red channel < 128 means black (inside text)
+            if (maskData[pixelIndex] < 128) {
+                isInsideText = true;
+            }
+        }
+        
+        if (!isInsideText) {
+            // Random binary char
+            const char = config.charSet[Math.floor(Math.random() * config.charSet.length)];
+            
+            // Sometimes draw a bright white head character
+            if (Math.random() > 0.8) {
+                bufferCtx.fillStyle = "#FFFFFF";
+                bufferCtx.fillText(char, x, y);
+                bufferCtx.fillStyle = config.tint;
+            } else {
+                bufferCtx.fillText(char, x, y);
+            }
         } else {
-            bufferCtx.fillText(char, i * fontSize, columns[i] * fontSize);
+            // Draw a very dark "void" to ensure the silhouette remains solid even if bg fades
+            bufferCtx.fillStyle = '#050709';
+            bufferCtx.fillRect(x - fontSize/2, y - fontSize, fontSize, fontSize);
+            bufferCtx.fillStyle = config.tint;
         }
 
         // Reset drop to top randomly
-        if (columns[i] * fontSize > height && Math.random() > 0.975) {
+        if (y > height && Math.random() > 0.975) {
             columns[i] = 0;
         }
         columns[i]++;
