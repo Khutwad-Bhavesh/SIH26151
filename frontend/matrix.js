@@ -7,7 +7,7 @@ const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d', { alpha: false });
 
 let width, height;
-const cellSize = 9;
+const cellSize = 6;
 
 const bufferCanvas = document.createElement('canvas');
 const bufferCtx = bufferCanvas.getContext('2d');
