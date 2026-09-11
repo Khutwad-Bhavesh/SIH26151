@@ -86,7 +86,22 @@ class GraphBuilder:
 
         if target:
             target_lower = target.lower()
-            matched_author = next((author for author in partition if author.lower() == target_lower), None)
+            
+            # Find the author who matches the target OR has a matching BTC/PGP/Infra
+            matched_author = None
+            for author in partition:
+                author_df = df[df['author'] == author]
+                if author.lower() == target_lower:
+                    matched_author = author
+                    break
+                
+                # Check contents (BTC/PGP) or Infra ID
+                if not author_df.empty:
+                    content = " ".join(author_df['content'].dropna().values).lower()
+                    infra = " ".join(author_df.get('infrastructure_id', pd.Series()).dropna().astype(str).values).lower()
+                    if target_lower in content or target_lower in infra:
+                        matched_author = author
+                        break
             
             if not matched_author:
                 raise ValueError(f"Target '{target}' not found in the database.")
@@ -104,6 +119,10 @@ class GraphBuilder:
             gpu = author_df['gpu_timing_hash'].dropna().iloc[0] if 'gpu_timing_hash' in author_df.columns and not author_df['gpu_timing_hash'].dropna().empty else "UNKNOWN"
             infra = author_df['infrastructure_id'].dropna().iloc[0] if 'infrastructure_id' in author_df.columns and not author_df['infrastructure_id'].dropna().empty else "UNKNOWN"
             
+            risk = author_df['risk_level'].dropna().iloc[0] if 'risk_level' in author_df.columns and not author_df['risk_level'].dropna().empty else "Unknown"
+            malware = author_df['associated_malware'].dropna().iloc[0] if 'associated_malware' in author_df.columns and not author_df['associated_malware'].dropna().empty else "None"
+            domains = author_df['domains'].dropna().iloc[0] if 'domains' in author_df.columns and not author_df['domains'].dropna().empty else "None"
+            
             nodes.append({
                 "data": {
                     "id": author,
@@ -112,7 +131,10 @@ class GraphBuilder:
                     "pgp": pgp,
                     "btc": btc,
                     "gpu": gpu,
-                    "infra": infra
+                    "infra": infra,
+                    "risk": risk,
+                    "malware": malware,
+                    "domains": domains
                 }
             })
         

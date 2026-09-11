@@ -286,6 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
             evidenceReason.innerHTML = `<ul style="font-size: 13px; color: var(--primary-text);">
                 <li style="margin-bottom: 8px;"><strong>BTC:</strong> <span style="font-family: monospace;">${data.btc}</span></li>
                 <li style="margin-bottom: 8px;"><strong>Infra ID:</strong> <span style="font-family: monospace; color: var(--secondary-neon);">${data.infra}</span></li>
+                <li style="margin-bottom: 8px;"><strong>Risk Level:</strong> <span style="font-weight: bold; color: ${data.risk === 'Critical' ? 'var(--secondary-neon)' : 'inherit'};">${data.risk}</span></li>
+                <li style="margin-bottom: 8px;"><strong>Malware:</strong> ${data.malware}</li>
+                <li style="margin-bottom: 8px;"><strong>Domains:</strong> ${data.domains}</li>
                 <li><strong>GPU Hash:</strong> <span style="font-family: monospace;">${data.gpu}</span></li>
             </ul>`;
             
@@ -337,5 +340,32 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
+    });
+
+    document.getElementById("btn-export-pdf").addEventListener("click", () => {
+        if (!evidencePanel.classList.contains("show")) {
+            alert("No dossier selected. Please click on a target node first to generate a report.");
+            return;
+        }
+        
+        const printElement = evidencePanel.cloneNode(true);
+        // Force dark mode styles to printable styles
+        printElement.style.background = "#1a1a2e";
+        printElement.style.padding = "20px";
+        printElement.style.border = "1px solid #000";
+        
+        // Remove close button for print
+        const closeBtn = printElement.querySelector('.btn-close');
+        if(closeBtn) closeBtn.remove();
+        
+        const opt = {
+          margin:       0.5,
+          filename:     'ATLAS_Executive_Report.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2 },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(printElement).save();
     });
 });
