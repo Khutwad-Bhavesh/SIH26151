@@ -32,4 +32,4 @@ def generate_graph_data(target=None):
     G = GraphBuilder.build_network(df)
     
     # 4. Format for UI consumption
-    return GraphBuilder.format_for_cytoscape(G, target=target)
+    return GraphBuilder.format_for_cytoscape(G, df, target=target)
