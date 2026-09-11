@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     selector: 'node',
                     style: {
-                        'background-color': '#00A3FF',
+                        'background-color': '#E8A33D', // Gold theme
                         'label': 'data(id)',
                         'color': '#FFFFFF',
                         'font-size': '11px',
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         'height': 24,
                         'shape': 'hexagon',
                         'shadow-blur': 15,
-                        'shadow-color': '#00A3FF',
+                        'shadow-color': '#E8A33D',
                         'shadow-opacity': 0.8
                     }
                 },
@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     selector: 'edge',
                     style: {
                         'width': 'data(weight)',
-                        'line-color': '#00A3FF',
+                        'line-color': '#E8A33D',
                         'curve-style': 'bezier',
                         'opacity': 0.25
                     }
@@ -279,10 +279,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     selector: '.highlighted',
                     style: {
-                        'background-color': '#FF2A6D', // Cyber neon pink
+                        'background-color': '#00E5FF', // Neon Cyan
                         'border-color': '#FFFFFF',
                         'border-width': 3,
-                        'shadow-color': '#FF2A6D',
+                        'shadow-color': '#00E5FF',
                         'shadow-blur': 25,
                         'shadow-opacity': 1
                     }
