@@ -1,215 +1,91 @@
 /**
- * A.T.L.A.S. Matrix Digital Rain Canvas2D Renderer
- * Implements the 21st.dev ASCII-art effect pipeline.
+ * A.T.L.A.S. Pixel Wave Canvas2D Renderer
+ * Implements the 21st.dev "Custom ASCII art" pixel effect.
  */
 
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas.getContext('2d', { alpha: false });
 
 let width, height;
-let columns = [];
-const fontSize = 14;
+const cellSize = 13;
 
-// 21st.dev Config (Blue Theme Override)
+// 21st.dev Config (Pixel Wave)
 const config = {
-    charSet: "01", // Binary
-    tint: "#00A3FF", // Blue theme
-    bgMode: "solid",
-    bgAlpha: 0.1, // Fade trails
+    tint: "#3ca6ff",
     pfx: {
         vignette: { enabled: true, intensity: 38 },
-        scanLines: { enabled: true, intensity: 28 },
-        chromatic: { enabled: true, intensity: 40 },
-        bloom: { enabled: true, intensity: 60 },
-        filmGrain: { enabled: true, intensity: 40 },
-        glitch: { enabled: true, intensity: 20 }
+        scanLines: { enabled: true, intensity: 60 },
+        bloom: { enabled: true, intensity: 60 }
     }
 };
 
-// Offscreen buffer for post-processing
 const bufferCanvas = document.createElement('canvas');
 const bufferCtx = bufferCanvas.getContext('2d');
-
-// Offscreen buffer for the text mask
-const maskCanvas = document.createElement('canvas');
-const maskCtx = maskCanvas.getContext('2d', { willReadFrequently: true });
-let blockyCanvas = document.createElement('canvas');
-let blockyCtx = blockyCanvas.getContext('2d');
 
 function resize() {
     width = canvas.width = bufferCanvas.width = window.innerWidth;
     height = canvas.height = bufferCanvas.height = window.innerHeight;
     
-    const colCount = Math.floor(width / fontSize) + 1;
-    columns = Array(colCount).fill(0).map(() => Math.random() * -100); // Random start heights
-    
-    // Fill buffer with dark initially
     bufferCtx.fillStyle = '#0D1013';
     bufferCtx.fillRect(0, 0, width, height);
-    
-    // Create text mask
-    maskCanvas.width = width;
-    maskCanvas.height = height;
-    maskCtx.fillStyle = 'white';
-    maskCtx.fillRect(0, 0, width, height);
-    
-    maskCtx.fillStyle = 'black';
-    maskCtx.strokeStyle = 'black';
-    maskCtx.lineJoin = 'round';
-    
-    // Dynamically size font based on width
-    const maskFontSize = Math.min(width / 6, 250);
-    maskCtx.lineWidth = maskFontSize * 0.15; // Thick stroke for bubble effect
-    maskCtx.font = `900 ${maskFontSize}px "Arial Rounded MT Bold", "Comic Sans MS", "IBM Plex Sans", sans-serif`;
-    maskCtx.textAlign = 'center';
-    maskCtx.textBaseline = 'middle';
-    
-    // Move slightly up since the dashboard UI covers the bottom
-    maskCtx.strokeText('A.T.L.A.S.', width / 2, height / 2 - 50);
-    maskCtx.fillText('A.T.L.A.S.', width / 2, height / 2 - 50);
-    
-    const maskData = maskCtx.getImageData(0, 0, width, height).data;
-    
-    // Pre-calculate the blocky grid-aligned mask
-    blockyCanvas.width = width;
-    blockyCanvas.height = height;
-    blockyCtx.fillStyle = '#000000'; // Pure black
-    
-    // Iterate over the grid
-    for (let y = 0; y < height; y += fontSize) {
-        for (let x = 0; x < width; x += fontSize) {
-            const pixelIndex = (y * width + x) * 4;
-            if (maskData[pixelIndex] < 128) {
-                // If inside text, draw a black block for this cell
-                blockyCtx.fillRect(x - fontSize/2, y - fontSize, fontSize + 1, fontSize + 1);
-            }
-        }
-    }
 }
 window.addEventListener('resize', resize);
 resize();
 
-function generateNoise(ctx, width, height, intensity) {
-    // Optimization: Draw a small noise pattern and tile it, instead of looping over every pixel.
-    const noiseCanvas = document.createElement('canvas');
-    noiseCanvas.width = 100;
-    noiseCanvas.height = 100;
-    const nCtx = noiseCanvas.getContext('2d');
-    const imgData = nCtx.createImageData(100, 100);
-    const data = imgData.data;
-    const alpha = (intensity / 100) * 255;
-    
-    for (let i = 0; i < data.length; i += 4) {
-        const val = Math.random() * 255;
-        data[i] = val;
-        data[i + 1] = val;
-        data[i + 2] = val;
-        data[i + 3] = alpha * 0.1; // Very subtle
-    }
-    nCtx.putImageData(imgData, 0, 0);
-    
-    ctx.globalCompositeOperation = 'overlay';
-    const pattern = ctx.createPattern(noiseCanvas, 'repeat');
-    ctx.fillStyle = pattern;
-    ctx.fillRect(0, 0, width, height);
-    ctx.globalCompositeOperation = 'source-over';
-}
-
-function drawMatrix() {
-    // 1. Fade the previous frame to create trails
-    bufferCtx.fillStyle = `rgba(13, 16, 19, ${config.bgAlpha})`;
+function drawPixelWave(time) {
+    // Clear buffer
+    bufferCtx.fillStyle = '#0D1013';
     bufferCtx.fillRect(0, 0, width, height);
-
-    // 2. Draw falling characters
-    bufferCtx.fillStyle = config.tint;
-    bufferCtx.font = `${fontSize}px "IBM Plex Mono", monospace`;
-    bufferCtx.textAlign = 'center';
-
-    for (let i = 0; i < columns.length; i++) {
-        const x = i * fontSize;
-        const y = columns[i] * fontSize;
-        
-        // Random binary char
-        const char = config.charSet[Math.floor(Math.random() * config.charSet.length)];
-        
-        // Sometimes draw a bright white head character
-        if (Math.random() > 0.8) {
-            bufferCtx.fillStyle = "#FFFFFF";
-            bufferCtx.fillText(char, x, y);
-            bufferCtx.fillStyle = config.tint;
-        } else {
-            bufferCtx.fillText(char, x, y);
+    
+    // Draw grid of pixels
+    for (let y = 0; y < height; y += cellSize) {
+        for (let x = 0; x < width; x += cellSize) {
+            // Wave math (2D sine wave based on time and position)
+            // Creates a radial pulsing wave
+            const distance = Math.sqrt(Math.pow(x - width/2, 2) + Math.pow(y - height/2, 2));
+            const wave = Math.sin(distance * 0.005 - time * 0.002) * 0.5 + 0.5;
+            
+            // Add some secondary waves for complexity
+            const wave2 = Math.sin(x * 0.01 + time * 0.001) * Math.cos(y * 0.01 + time * 0.001) * 0.5 + 0.5;
+            
+            const intensity = (wave * 0.7 + wave2 * 0.3);
+            
+            // Draw pixel if intensity is somewhat visible
+            if (intensity > 0.05) {
+                bufferCtx.globalAlpha = intensity;
+                bufferCtx.fillStyle = config.tint;
+                // Draw a pixel box (leaving 1px gap for grid effect)
+                bufferCtx.fillRect(x, y, cellSize - 1, cellSize - 1);
+            }
         }
-
-        // Reset drop to top randomly
-        if (y > height && Math.random() > 0.975) {
-            columns[i] = 0;
-        }
-        columns[i]++;
     }
+    bufferCtx.globalAlpha = 1.0;
 }
 
 function applyPostProcessing() {
-    // Start with a clear main canvas
     ctx.fillStyle = '#0D1013';
     ctx.fillRect(0, 0, width, height);
 
-    // Glitch effect (random slicing)
-    let drawX = 0;
-    let drawY = 0;
-    if (config.pfx.glitch.enabled && Math.random() < (config.pfx.glitch.intensity / 100) * 0.1) {
-        drawX = (Math.random() - 0.5) * 20;
-        // Random slice horizontally
-        const sliceY = Math.random() * height;
-        const sliceH = Math.random() * 50 + 10;
-        bufferCtx.drawImage(bufferCanvas, 0, sliceY, width, sliceH, drawX * 2, sliceY, width, sliceH);
-    }
-
-    // Chromatic Aberration
-    if (config.pfx.chromatic.enabled) {
-        const offset = (config.pfx.chromatic.intensity / 100) * 4;
-        ctx.globalCompositeOperation = 'screen';
-        
-        // Pseudo-chromatic using globalAlpha and shifting
-        ctx.globalAlpha = 0.5;
-        // Left shift (Red-ish)
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
-        ctx.drawImage(bufferCanvas, drawX - offset, drawY);
-        
-        // Right shift (Blue-ish)
-        ctx.fillStyle = 'rgba(0, 0, 255, 0.2)';
-        ctx.drawImage(bufferCanvas, drawX + offset, drawY);
-        
-        // Center
-        ctx.globalAlpha = 1.0;
-        ctx.drawImage(bufferCanvas, drawX, drawY);
-        ctx.globalCompositeOperation = 'source-over';
-    } else {
-        ctx.drawImage(bufferCanvas, drawX, drawY);
-    }
+    // Base draw
+    ctx.drawImage(bufferCanvas, 0, 0);
 
     // Bloom
     if (config.pfx.bloom.enabled) {
         ctx.globalCompositeOperation = 'screen';
         ctx.filter = `blur(${(config.pfx.bloom.intensity / 100) * 8}px)`;
         ctx.globalAlpha = (config.pfx.bloom.intensity / 100) * 0.8;
-        ctx.drawImage(bufferCanvas, drawX, drawY);
+        ctx.drawImage(bufferCanvas, 0, 0);
         ctx.filter = 'none';
         ctx.globalAlpha = 1.0;
         ctx.globalCompositeOperation = 'source-over';
     }
 
-    // Scanlines
+    // Scanlines (High intensity)
     if (config.pfx.scanLines.enabled) {
-        ctx.fillStyle = `rgba(0, 0, 0, ${(config.pfx.scanLines.intensity / 100) * 0.3})`;
+        ctx.fillStyle = `rgba(0, 0, 0, ${(config.pfx.scanLines.intensity / 100) * 0.6})`;
         for (let i = 0; i < height; i += 4) {
             ctx.fillRect(0, i, width, 2);
         }
-    }
-
-    // Film Grain
-    if (config.pfx.filmGrain.enabled) {
-        generateNoise(ctx, width, height, config.pfx.filmGrain.intensity);
     }
 
     // Vignette
@@ -220,24 +96,12 @@ function applyPostProcessing() {
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
     }
-    
-    // Draw the final blocky ATLAS silhouette over everything (pure black, pixelated edges)
-    ctx.drawImage(blockyCanvas, 0, 0);
 }
-
-let lastTime = 0;
-const fps = 30; // Matrix looks better slightly choppy
 
 function animate(currentTime) {
     requestAnimationFrame(animate);
-    
-    // Throttle FPS for the matrix look
-    if (currentTime - lastTime < 1000 / fps) return;
-    lastTime = currentTime;
-
-    drawMatrix();
+    drawPixelWave(currentTime);
     applyPostProcessing();
 }
 
-// Start
 requestAnimationFrame(animate);
