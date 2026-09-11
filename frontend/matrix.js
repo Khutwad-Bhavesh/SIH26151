@@ -54,7 +54,8 @@ function drawDitherPulse(time) {
     const sourceData = sourceCtx.getImageData(0, 0, width, height).data;
     
     // Pulse animation (Math.sin from 0.7 to 1.3 based on time)
-    const pulse = Math.sin(time * 0.003) * 0.3 + 1.0;
+    // Slowed down significantly (0.001 multiplier)
+    const pulse = Math.sin(time * 0.001) * 0.3 + 1.0;
     
     // Draw grid of dithered pixels
     for (let y = 0; y < height; y += cellSize) {
@@ -71,8 +72,8 @@ function drawDitherPulse(time) {
                 const a = sourceData[pixelIndex + 3];
                 
                 if (a > 10) {
-                    // Calculate luminance
-                    const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+                    // Calculate luminance, boosted heavily for a brighter dither
+                    const lum = Math.min(1.0, ((r * 0.299 + g * 0.587 + b * 0.114) / 255) * 1.4 + 0.15);
                     
                     // Apply contrast (config.contrast = 158) -> multiplier 1.58
                     const contrastLum = ((lum - 0.5) * 1.58) + 0.5;
