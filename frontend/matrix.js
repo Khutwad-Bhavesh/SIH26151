@@ -72,8 +72,8 @@ function drawDitherPulse(time) {
                 const a = sourceData[pixelIndex + 3];
                 
                 if (a > 10) {
-                    // Calculate luminance, boosted heavily for a brighter dither
-                    const lum = Math.min(1.0, ((r * 0.299 + g * 0.587 + b * 0.114) / 255) * 1.4 + 0.15);
+                    // Calculate luminance (Original unboosted formula)
+                    const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
                     
                     // Apply contrast (config.contrast = 158) -> multiplier 1.58
                     const contrastLum = ((lum - 0.5) * 1.58) + 0.5;
