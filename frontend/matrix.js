@@ -128,8 +128,8 @@ function drawMatrix() {
                 bufferCtx.fillText(char, x, y);
             }
         } else {
-            // Draw a very dark "void" to ensure the silhouette remains solid even if bg fades
-            bufferCtx.fillStyle = '#050709';
+            // Draw a pure black "void" to ensure the silhouette remains solid
+            bufferCtx.fillStyle = '#000000';
             bufferCtx.fillRect(x - fontSize/2, y - fontSize, fontSize, fontSize);
             bufferCtx.fillStyle = config.tint;
         }
