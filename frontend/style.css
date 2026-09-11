@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-    --ink: #0D1013;
-    --panel: #171B21;
-    --line: #242A33;
+    --ink: rgba(13, 16, 19, 0.4);
+    --panel: rgba(23, 27, 33, 0.75);
+    --line: rgba(36, 42, 51, 0.8);
     --fog: #8A93A3;
-    --signal: #E8A33D;
+    --signal: #00A3FF;
     --paper: #EDEDEC;
 }
 
@@ -17,7 +17,7 @@
 
 body {
     font-family: 'IBM Plex Sans', sans-serif;
-    background-color: var(--ink);
+    background-color: transparent;
     color: var(--paper);
     height: 100vh;
     overflow: hidden;
@@ -27,7 +27,7 @@ body {
 .boot-overlay {
     position: fixed;
     inset: 0;
-    background: var(--ink);
+    background: #0D1013;
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -145,6 +145,8 @@ header h1 span {
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 24px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 h3 {
