@@ -29,7 +29,7 @@
         <header class="top-nav">
             <div class="logo-container">
                 <div class="pulse-ring"></div>
-                <h1>PROJECT <span>A.T.L.A.S.</span></h1>
+                <h1>A.T.L.A.S. <span>— Intelligence Dashboard</span></h1>
             </div>
             <div class="nav-status">
                 <span class="status-dot"></span>
@@ -53,10 +53,10 @@
                 </div>
 
                 <div class="metrics-panel glass-panel live-alerts-panel" style="margin-top: 15px;">
-                    <h3 style="color: var(--secondary-neon);"><span class="pulse-dot"></span> LIVE THREAT FEED</h3>
-                    <div id="live-alerts-ticker" style="height: 120px; overflow-y: hidden; font-size: 11px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                    <h3 style="color: var(--signal);"><span class="pulse-dot"></span> LIVE THREAT FEED</h3>
+                    <div id="live-alerts-ticker" style="height: 120px; overflow-y: hidden; font-size: 11px; font-family: 'IBM Plex Mono', monospace; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
                         <!-- Alerts injected by JS -->
-                        <div style="color: var(--text-dim);">Scanning mempools...</div>
+                        <div style="color: var(--fog);">Scanning mempools...</div>
                     </div>
                 </div>
 
@@ -65,15 +65,15 @@
                     <div class="bento-grid">
                         <div class="bento-box">
                             <span class="bento-label">Identities</span>
-                            <span id="metric-nodes" class="bento-value glow">0</span>
+                            <span id="metric-nodes" class="bento-value">0</span>
                         </div>
                         <div class="bento-box">
                             <span class="bento-label">Correlations</span>
-                            <span id="metric-edges" class="bento-value glow">0</span>
+                            <span id="metric-edges" class="bento-value">0</span>
                         </div>
                         <div class="bento-box full-width">
                             <span class="bento-label">Avg Confidence</span>
-                            <span id="metric-confidence" class="bento-value glow">0.0%</span>
+                            <span id="metric-confidence" class="bento-value">0.0%</span>
                         </div>
                     </div>
                 </div>
@@ -83,11 +83,11 @@
                     <div class="bento-grid" style="grid-template-columns: 1fr;">
                         <div class="bento-box full-width" style="display: flex; justify-content: space-between;">
                             <span class="bento-label">Tor Misconfigurations</span>
-                            <span id="metric-misconfigs" class="bento-value glow" style="color: var(--secondary-neon);">0</span>
+                            <span id="metric-misconfigs" class="bento-value" style="color: var(--signal);">0</span>
                         </div>
                         <div class="bento-box full-width" style="display: flex; justify-content: space-between;">
                             <span class="bento-label">SSL Clearnet Leaks</span>
-                            <span id="metric-ssl" class="bento-value glow" style="color: var(--secondary-neon);">0</span>
+                            <span id="metric-ssl" class="bento-value" style="color: var(--signal);">0</span>
                         </div>
                     </div>
                 </div>
@@ -95,10 +95,10 @@
                 <div class="metrics-panel glass-panel" style="margin-top: 15px;">
                     <h3>Data Export</h3>
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button id="btn-export-csv" class="btn-primary" style="flex: 1; padding: 8px; font-size: 12px; background: rgba(0, 255, 255, 0.1); border-color: rgba(0, 255, 255, 0.3);">Export CSV</button>
-                        <button id="btn-export-json" class="btn-primary" style="flex: 1; padding: 8px; font-size: 12px; background: rgba(0, 255, 255, 0.1); border-color: rgba(0, 255, 255, 0.3);">Export JSON</button>
+                        <button id="btn-export-csv" class="btn-primary" style="flex: 1; padding: 8px; font-size: 12px;">Export CSV</button>
+                        <button id="btn-export-json" class="btn-primary" style="flex: 1; padding: 8px; font-size: 12px;">Export JSON</button>
                     </div>
-                    <button id="btn-export-pdf" class="btn-primary" style="width: 100%; margin-top: 10px; padding: 8px; font-size: 12px; background: rgba(0, 255, 255, 0.2);">Export PDF Report</button>
+                    <button id="btn-export-pdf" class="btn-primary" style="width: 100%; margin-top: 10px; padding: 8px; font-size: 12px;">Export PDF Report</button>
                 </div>
             </aside>
 
@@ -144,9 +144,9 @@
                         </div>
                     </div>
 
-                    <div class="dossier-section" id="dossier-actions" style="display: none; margin-top: 15px; border-top: 1px solid rgba(0,255,255,0.2); padding-top: 15px;">
+                    <div class="dossier-section" id="dossier-actions" style="display: none; margin-top: 15px; border-top: 1px solid var(--line); padding-top: 15px;">
                         <button id="btn-view-timeline" class="btn-primary" style="width: 100%; margin-bottom: 8px; font-size: 11px;">View Timeline</button>
-                        <button id="btn-trace-ledger" class="btn-primary" style="width: 100%; margin-bottom: 8px; font-size: 11px; background: rgba(255,179,0,0.1); border-color: rgba(255,179,0,0.3); color: #FFB300;">Trace Crypto Ledger</button>
+                        <button id="btn-trace-ledger" class="btn-primary" style="width: 100%; margin-bottom: 8px; font-size: 11px;">Trace Crypto Ledger</button>
                     </div>
 
                     <div class="dossier-section" style="margin-top: 15px;">
@@ -160,12 +160,12 @@
     
     <!-- Timeline / Crypto Modal -->
     <div id="intel-modal" class="boot-overlay" style="display: none; opacity: 0; transition: opacity 0.3s; z-index: 9999;">
-        <div class="glass-panel" style="width: 600px; max-width: 90vw; background: rgba(10, 10, 20, 0.95); border: 1px solid var(--primary-neon);">
-            <div class="dossier-header" style="justify-content: space-between; border-bottom: 1px solid rgba(0,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">
+        <div class="glass-panel" style="width: 600px; max-width: 90vw; background: var(--panel);">
+            <div class="dossier-header" style="justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 15px;">
                 <h3 id="modal-title">INTELLIGENCE OVERLAY</h3>
-                <button id="btn-close-modal" class="btn-close" style="background: transparent; color: var(--primary-neon); border: none; cursor: pointer; font-size: 18px;">×</button>
+                <button id="btn-close-modal" class="btn-close" style="font-size: 18px;">×</button>
             </div>
-            <div id="modal-content" style="min-height: 200px; color: var(--primary-text); font-family: 'Fira Code', monospace; font-size: 12px; line-height: 1.5;">
+            <div id="modal-content" style="min-height: 200px; color: var(--paper); font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.5;">
                 <!-- Content injected by JS -->
             </div>
         </div>

@@ -62,24 +62,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = targetLink.textContent.replace("ID: ", "");
         modalTitle.textContent = `TIMELINE INTELLIGENCE: ${target}`;
         modalContent.innerHTML = `
-            <div style="border-left: 2px solid var(--primary-neon); padding-left: 15px; margin-left: 10px;">
+            <div style="border-left: 2px solid var(--signal); padding-left: 15px; margin-left: 10px;">
                 <div style="position: relative; margin-bottom: 20px;">
-                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--primary-neon);"></div>
-                    <strong style="color: var(--primary-neon);">2019-2020</strong><br>
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--signal);"></div>
+                    <strong style="color: var(--signal);">2019-2020</strong><br>
                     Initial activity detected on MarketAlpha.<br>
-                    <span style="color: var(--text-dim);">Infrastructure: SRV-NGINX-SSH-99X8</span>
+                    <span style="color: var(--fog);">Infrastructure: SRV-NGINX-SSH-99X8</span>
                 </div>
                 <div style="position: relative; margin-bottom: 20px;">
-                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--secondary-neon);"></div>
-                    <strong style="color: var(--secondary-neon);">2021-2022</strong><br>
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--signal);"></div>
+                    <strong style="color: var(--signal);">2021-2022</strong><br>
                     Migration to DreadForum. New PGP generated.<br>
-                    <span style="color: var(--text-dim);">Infrastructure remains identical.</span>
+                    <span style="color: var(--fog);">Infrastructure remains identical.</span>
                 </div>
                 <div style="position: relative;">
-                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: #FFB300;"></div>
-                    <strong style="color: #FFB300;">2023-Present</strong><br>
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--signal);"></div>
+                    <strong style="color: var(--signal);">2023-Present</strong><br>
                     Rebranded identity detected. Active malware distribution.<br>
-                    <span style="color: var(--text-dim);">Confidence: 99% (Infrastructure Match)</span>
+                    <span style="color: var(--fog);">Confidence: 99% (Infrastructure Match)</span>
                 </div>
             </div>
         `;
@@ -92,15 +92,15 @@ document.addEventListener("DOMContentLoaded", () => {
         modalTitle.textContent = `LEDGER TRACE: ${target}`;
         modalContent.innerHTML = `
             <div style="text-align: center; padding: 20px;">
-                <h4 style="color: #FFB300; margin-bottom: 20px;">TRANSACTION GRAPH (MOCK)</h4>
-                <div style="display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.5); padding: 30px; border-radius: 8px;">
-                    <div style="border: 1px solid #FFB300; padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">WALLET</div>
-                    <div style="color: var(--primary-neon);">→ 4.5 BTC →</div>
-                    <div style="border: 1px solid var(--secondary-neon); padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">MIXER</div>
-                    <div style="color: var(--primary-neon);">→ 4.4 BTC →</div>
-                    <div style="border: 1px solid #00E676; padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">EXCHANGE</div>
+                <h4 style="color: var(--signal); margin-bottom: 20px;">TRANSACTION GRAPH (MOCK)</h4>
+                <div style="display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.3); padding: 30px; border-radius: 8px;">
+                    <div style="border: 1px solid var(--line); padding: 10px; border-radius: 4px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">WALLET</div>
+                    <div style="color: var(--fog);">→ 4.5 BTC →</div>
+                    <div style="border: 1px solid var(--signal); padding: 10px; border-radius: 4px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; color: var(--signal);">MIXER</div>
+                    <div style="color: var(--fog);">→ 4.4 BTC →</div>
+                    <div style="border: 1px solid var(--line); padding: 10px; border-radius: 4px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">EXCH.</div>
                 </div>
-                <p style="margin-top: 20px; color: var(--text-dim);">Ledger integration active. Tracing heuristic: High-risk mixing service.</p>
+                <p style="margin-top: 20px; color: var(--fog);">Ledger integration active. Tracing heuristic: High-risk mixing service.</p>
             </div>
         `;
         intelModal.style.display = "flex";
@@ -246,41 +246,35 @@ document.addEventListener("DOMContentLoaded", () => {
                     selector: 'node',
                     style: {
                         'background-color': function(ele) {
-                            // Assign solid colors for nodes
-                            const colors = ['#00E5FF', '#FFB300', '#00E676', '#FFFFFF'];
-                            return colors[ele.data('cluster') % colors.length];
-                        },
-                        'border-width': 1,
-                        'border-color': '#000000',
-                        'label': 'data(id)',
-                        'color': '#FFFFFF',
-                        'font-family': "'Fira Code', monospace",
-                        'font-size': '10px',
-                        'text-valign': 'top',
-                        'text-halign': 'center',
-                        'text-margin-y': -8,
-                        'text-outline-color': '#000000',
+                        'background-color': '#8A93A3', // fog
+                        'label': 'data(label)',
+                        'color': '#EDEDEC', // paper
+                        'font-size': '12px',
+                        'font-family': 'IBM Plex Mono',
+                        'text-valign': 'bottom',
+                        'text-margin-y': '6px',
+                        'text-outline-color': '#0D1013', // ink
                         'text-outline-width': 2,
-                        'width': 20,
-                        'height': 20,
-                        'shape': 'ellipse'
+                        'border-color': '#171B21', // panel
+                        'border-width': 1
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
-                        'width': 'mapData(weight, 1, 10, 1, 4)',
-                        'line-color': '#333333',
+                        'width': 'data(weight)',
+                        'line-color': '#242A33', // line
                         'curve-style': 'bezier',
-                        'opacity': 1.0,
-                        'line-style': 'solid'
+                        'opacity': 0.8
                     }
                 },
                 {
-                    selector: 'edge.highlighted',
+                    selector: '.highlighted',
                     style: {
-                        'line-color': '#00E5FF',
-                        'width': 2
+                        'background-color': '#E8A33D', // signal
+                        'border-color': '#EDEDEC',
+                        'border-width': 2,
+                        'border-style': 'solid'
                     }
                 }
             ],
@@ -320,31 +314,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const evidenceWeight = document.getElementById("evidence-weight");
             const badge = document.getElementById("confidence-badge");
             
-            if (weight > 6) {
-                badge.textContent = "CRITICAL MATCH";
-                badge.style.color = "var(--secondary-neon)";
-                badge.style.borderColor = "var(--secondary-neon)";
-                evidenceWeight.style.color = "var(--secondary-neon)";
-            } else if (weight > 3) {
-                badge.textContent = "HIGH CONFIDENCE";
-                badge.style.color = "var(--high-conf)";
-                badge.style.borderColor = "var(--high-conf)";
-                evidenceWeight.style.color = "var(--primary-neon)";
-            } else {
-                badge.textContent = "POSSIBLE LINK";
-                badge.style.color = "var(--text-dim)";
-                badge.style.borderColor = "var(--text-dim)";
-                evidenceWeight.style.color = "var(--primary-neon)";
-            }
+            const conf = weight * 10;
+            badge.textContent = conf >= 80 ? 'CRITICAL MATCH' : (conf >= 50 ? 'HIGH CONFIDENCE' : 'POSSIBLE LINK');
+            badge.style.background = conf >= 80 ? 'var(--signal)' : 'var(--line)';
+            badge.style.color = conf >= 80 ? 'var(--ink)' : 'var(--fog)';
+            evidenceWeight.style.color = "var(--signal)";
 
             // Render Reasons
             document.querySelector('.dossier-section:nth-child(3) h4').textContent = "CORROBORATING EVIDENCE";
             const rawReason = edge.data('reason');
-            if (rawReason.includes(' | ')) {
+            if (rawReason && rawReason.includes(' | ')) {
                 const reasonsList = rawReason.split(' | ').map(r => `<li>${r}</li>`).join('');
                 evidenceReason.innerHTML = `<ul>${reasonsList}</ul>`;
-            } else {
+            } else if (rawReason) {
                 evidenceReason.innerHTML = `<ul><li>${rawReason}</li></ul>`;
+            } else {
+                evidenceReason.innerHTML = '';
             }
 
             // Show Panel
@@ -362,22 +347,22 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const badge = document.getElementById("confidence-badge");
             badge.textContent = `CLUSTER ID: ${data.cluster}`;
-            badge.style.color = "var(--primary-neon)";
-            badge.style.borderColor = "var(--primary-neon)";
+            badge.style.color = "var(--signal)";
+            badge.style.borderColor = "var(--signal)";
             
             // Show PGP Key
             document.querySelector('.dossier-section:nth-child(2) h4').textContent = "PRIMARY PGP KEY";
-            document.querySelector('.score-display').innerHTML = `<span class="weight-value" style="font-size: 14px; word-break: break-all; color: var(--primary-neon);">${data.pgp}</span>`;
+            document.querySelector('.score-display').innerHTML = `<span class="weight-value" style="font-size: 14px; word-break: break-all; color: var(--signal);">${data.pgp}</span>`;
             
             // Show Identifiers
             document.querySelector('.dossier-section:nth-child(3) h4').textContent = "KNOWN IDENTIFIERS";
-            evidenceReason.innerHTML = `<ul style="font-size: 13px; color: var(--primary-text);">
-                <li style="margin-bottom: 8px;"><strong>BTC:</strong> <span style="font-family: monospace;">${data.btc}</span></li>
-                <li style="margin-bottom: 8px;"><strong>Infra ID:</strong> <span style="font-family: monospace; color: var(--secondary-neon);">${data.infra}</span></li>
-                <li style="margin-bottom: 8px;"><strong>Risk Level:</strong> <span style="font-weight: bold; color: ${data.risk === 'Critical' ? 'var(--secondary-neon)' : 'inherit'};">${data.risk}</span></li>
+            evidenceReason.innerHTML = `<ul style="font-size: 13px; color: var(--paper);">
+                <li style="margin-bottom: 8px;"><strong>BTC:</strong> <span style="font-family: 'IBM Plex Mono', monospace;">${data.btc}</span></li>
+                <li style="margin-bottom: 8px;"><strong>Infra ID:</strong> <span style="font-family: 'IBM Plex Mono', monospace; color: var(--signal);">${data.infra}</span></li>
+                <li style="margin-bottom: 8px;"><strong>Risk Level:</strong> <span style="font-weight: 500; color: ${data.risk === 'Critical' ? 'var(--signal)' : 'inherit'};">${data.risk}</span></li>
                 <li style="margin-bottom: 8px;"><strong>Malware:</strong> ${data.malware}</li>
                 <li style="margin-bottom: 8px;"><strong>Domains:</strong> ${data.domains}</li>
-                <li><strong>GPU Hash:</strong> <span style="font-family: monospace;">${data.gpu}</span></li>
+                <li><strong>GPU Hash:</strong> <span style="font-family: 'IBM Plex Mono', monospace;">${data.gpu}</span></li>
             </ul>`;
             
             evidencePanel.classList.add("show");
@@ -437,10 +422,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         const printElement = evidencePanel.cloneNode(true);
-        // Force dark mode styles to printable styles
-        printElement.style.background = "#1a1a2e";
+        // Force printable styles
+        printElement.style.background = "#ffffff";
+        printElement.style.color = "#000000";
         printElement.style.padding = "20px";
         printElement.style.border = "1px solid #000";
+        
+        // Remove text elements that are paper/fog color and force to black
+        const textElements = printElement.querySelectorAll('*');
+        textElements.forEach(el => {
+            el.style.color = "#000000";
+            if (el.tagName === 'BUTTON') el.remove();
+        });
         
         // Remove close button and action buttons for print
         const closeBtn = printElement.querySelector('.btn-close');
