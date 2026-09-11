@@ -25,29 +25,9 @@ const bufferCtx = bufferCanvas.getContext('2d');
 const sourceCanvas = document.createElement('canvas');
 const sourceCtx = sourceCanvas.getContext('2d', { willReadFrequently: true });
 
-// Create the source photo (Magnifying Glass)
+// Load the original source photo
 const img = new Image();
-const svgData = `
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 100 100">
-  <defs>
-    <radialGradient id="glass" cx="30%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="50%" stop-color="#a0f0f0"/>
-      <stop offset="100%" stop-color="#4080a0"/>
-    </radialGradient>
-    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffe55c"/>
-      <stop offset="40%" stop-color="#d4af37"/>
-      <stop offset="100%" stop-color="#805010"/>
-    </linearGradient>
-  </defs>
-  <line x1="20" y1="80" x2="45" y2="55" stroke="url(#gold)" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="60" cy="40" r="28" fill="url(#glass)"/>
-  <circle cx="60" cy="40" r="28" fill="none" stroke="url(#gold)" stroke-width="6"/>
-  <circle cx="28" cy="72" r="1.5" fill="red"/>
-  <circle cx="78" cy="62" r="1.5" fill="red"/>
-</svg>`;
-img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
+img.src = 'source_image.png';
 let imgLoaded = false;
 img.onload = () => imgLoaded = true;
 
