@@ -22,9 +22,38 @@ const config = {
 const bufferCanvas = document.createElement('canvas');
 const bufferCtx = bufferCanvas.getContext('2d');
 
+const sourceCanvas = document.createElement('canvas');
+const sourceCtx = sourceCanvas.getContext('2d', { willReadFrequently: true });
+
+// Create the source photo (Magnifying Glass)
+const img = new Image();
+const svgData = `
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="glass" cx="30%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#a0f0f0"/>
+      <stop offset="100%" stop-color="#4080a0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe55c"/>
+      <stop offset="40%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#805010"/>
+    </linearGradient>
+  </defs>
+  <line x1="20" y1="80" x2="45" y2="55" stroke="url(#gold)" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="60" cy="40" r="28" fill="url(#glass)"/>
+  <circle cx="60" cy="40" r="28" fill="none" stroke="url(#gold)" stroke-width="6"/>
+  <circle cx="28" cy="72" r="1.5" fill="red"/>
+  <circle cx="78" cy="62" r="1.5" fill="red"/>
+</svg>`;
+img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
+let imgLoaded = false;
+img.onload = () => imgLoaded = true;
+
 function resize() {
-    width = canvas.width = bufferCanvas.width = window.innerWidth;
-    height = canvas.height = bufferCanvas.height = window.innerHeight;
+    width = canvas.width = bufferCanvas.width = sourceCanvas.width = window.innerWidth;
+    height = canvas.height = bufferCanvas.height = sourceCanvas.height = window.innerHeight;
     
     bufferCtx.fillStyle = '#0D1013';
     bufferCtx.fillRect(0, 0, width, height);
@@ -37,25 +66,48 @@ function drawPixelWave(time) {
     bufferCtx.fillStyle = '#0D1013';
     bufferCtx.fillRect(0, 0, width, height);
     
+    if (!imgLoaded) return;
+    
+    // Draw source photo to hidden canvas
+    sourceCtx.clearRect(0, 0, width, height);
+    
+    // Draw image centered and scaled
+    const imgSize = Math.min(width, height) * 0.8; // 80% of screen
+    const drawX = (width - imgSize) / 2;
+    const drawY = (height - imgSize) / 2;
+    sourceCtx.drawImage(img, drawX, drawY, imgSize, imgSize);
+    
+    const sourceData = sourceCtx.getImageData(0, 0, width, height).data;
+    
     // Draw grid of pixels
     for (let y = 0; y < height; y += cellSize) {
         for (let x = 0; x < width; x += cellSize) {
-            // Wave math (2D sine wave based on time and position)
-            // Creates a radial pulsing wave
-            const distance = Math.sqrt(Math.pow(x - width/2, 2) + Math.pow(y - height/2, 2));
-            const wave = Math.sin(distance * 0.005 - time * 0.002) * 0.5 + 0.5;
+            // Sample the color at the center of the cell
+            const sampleX = Math.floor(x + cellSize / 2);
+            const sampleY = Math.floor(y + cellSize / 2);
             
-            // Add some secondary waves for complexity
-            const wave2 = Math.sin(x * 0.01 + time * 0.001) * Math.cos(y * 0.01 + time * 0.001) * 0.5 + 0.5;
-            
-            const intensity = (wave * 0.7 + wave2 * 0.3);
-            
-            // Draw pixel if intensity is somewhat visible
-            if (intensity > 0.05) {
-                bufferCtx.globalAlpha = intensity;
-                bufferCtx.fillStyle = config.tint;
-                // Draw a pixel box (leaving 1px gap for grid effect)
-                bufferCtx.fillRect(x, y, cellSize - 1, cellSize - 1);
+            if (sampleX < width && sampleY < height) {
+                const pixelIndex = (sampleY * width + sampleX) * 4;
+                const r = sourceData[pixelIndex];
+                const g = sourceData[pixelIndex + 1];
+                const b = sourceData[pixelIndex + 2];
+                const a = sourceData[pixelIndex + 3];
+                
+                // Animated wave (shimmer)
+                const distance = Math.sqrt(Math.pow(x - width/2, 2) + Math.pow(y - height/2, 2));
+                const wave = Math.sin(distance * 0.01 - time * 0.003) * 0.3 + 0.7; // 0.4 to 1.0 multiplier
+                
+                if (a > 10) {
+                    // Draw colored pixel
+                    bufferCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                    bufferCtx.globalAlpha = wave;
+                    bufferCtx.fillRect(x, y, cellSize - 1, cellSize - 1);
+                } else {
+                    // Draw faint background grid
+                    bufferCtx.fillStyle = '#11171f';
+                    bufferCtx.globalAlpha = 1.0;
+                    bufferCtx.fillRect(x, y, cellSize - 1, cellSize - 1);
+                }
             }
         }
     }
