@@ -245,38 +245,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     selector: 'node',
                     style: {
-                        'background-color': '#8A93A3',
+                        'background-color': '#00A3FF',
                         'label': 'data(id)',
-                        'color': '#EDEDEC',
-                        'font-size': '12px',
+                        'color': '#FFFFFF',
+                        'font-size': '11px',
+                        'font-weight': '500',
                         'font-family': 'IBM Plex Mono',
                         'text-valign': 'bottom',
-                        'text-margin-y': '6px',
-                        'text-outline-color': '#0D1013',
-                        'text-outline-width': 2,
-                        'border-color': '#171B21',
-                        'border-width': 1,
-                        'width': 20,
-                        'height': 20,
-                        'shape': 'ellipse'
+                        'text-margin-y': '8px',
+                        'text-background-color': '#0D1013',
+                        'text-background-opacity': 0.85,
+                        'text-background-padding': '4px',
+                        'text-background-shape': 'roundrectangle',
+                        'border-color': '#FFFFFF',
+                        'border-width': 1.5,
+                        'width': 24,
+                        'height': 24,
+                        'shape': 'hexagon',
+                        'shadow-blur': 15,
+                        'shadow-color': '#00A3FF',
+                        'shadow-opacity': 0.8
                     }
                 },
                 {
                     selector: 'edge',
                     style: {
                         'width': 'data(weight)',
-                        'line-color': '#242A33', // line
+                        'line-color': '#00A3FF',
                         'curve-style': 'bezier',
-                        'opacity': 0.8
+                        'opacity': 0.25
                     }
                 },
                 {
                     selector: '.highlighted',
                     style: {
-                        'background-color': '#E8A33D', // signal
-                        'border-color': '#EDEDEC',
-                        'border-width': 2,
-                        'border-style': 'solid'
+                        'background-color': '#FF2A6D', // Cyber neon pink
+                        'border-color': '#FFFFFF',
+                        'border-width': 3,
+                        'shadow-color': '#FF2A6D',
+                        'shadow-blur': 25,
+                        'shadow-opacity': 1
                     }
                 }
             ],
