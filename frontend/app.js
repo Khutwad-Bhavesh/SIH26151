@@ -21,6 +21,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let cy = null;
 
+    // --- 1.5 Live Threat Feed (Mock) ---
+    const alertsTicker = document.getElementById("live-alerts-ticker");
+    const mockAlerts = [
+        "🚨 ACTOR MIGRATION: AlphaFox → DarkFox (99% Conf)",
+        "💰 SUSPICIOUS TX: 4.5 BTC to Mixer",
+        "🌐 INFRA CHANGE: New Onion Service Detected",
+        "🔑 PGP ROTATION: ShadowBroker updated keys",
+        "🚨 ALIAS CORRELATION: FoxX matches DarkFox",
+        "⚠️ HIGH RISK: ZeroDay.exe payload seen in MarketA"
+    ];
+    
+    setInterval(() => {
+        if (Math.random() > 0.4) {
+            const alertText = mockAlerts[Math.floor(Math.random() * mockAlerts.length)];
+            const div = document.createElement("div");
+            div.style.color = alertText.includes("🚨") ? "var(--secondary-neon)" : (alertText.includes("💰") ? "#FFB300" : "var(--primary-neon)");
+            div.textContent = `[${new Date().toISOString().substring(11, 19)}] ${alertText}`;
+            
+            alertsTicker.insertBefore(div, alertsTicker.firstChild);
+            if (alertsTicker.children.length > 6) {
+                alertsTicker.removeChild(alertsTicker.lastChild);
+            }
+        }
+    }, 4500);
+
+    // Modal Elements
+    const intelModal = document.getElementById("intel-modal");
+    const btnCloseModal = document.getElementById("btn-close-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalContent = document.getElementById("modal-content");
+    const dossierActions = document.getElementById("dossier-actions");
+
+    btnCloseModal.addEventListener("click", () => {
+        intelModal.style.opacity = 0;
+        setTimeout(() => { intelModal.style.display = "none"; }, 300);
+    });
+
+    document.getElementById("btn-view-timeline").addEventListener("click", () => {
+        const target = targetLink.textContent.replace("ID: ", "");
+        modalTitle.textContent = `TIMELINE INTELLIGENCE: ${target}`;
+        modalContent.innerHTML = `
+            <div style="border-left: 2px solid var(--primary-neon); padding-left: 15px; margin-left: 10px;">
+                <div style="position: relative; margin-bottom: 20px;">
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--primary-neon);"></div>
+                    <strong style="color: var(--primary-neon);">2019-2020</strong><br>
+                    Initial activity detected on MarketAlpha.<br>
+                    <span style="color: var(--text-dim);">Infrastructure: SRV-NGINX-SSH-99X8</span>
+                </div>
+                <div style="position: relative; margin-bottom: 20px;">
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--secondary-neon);"></div>
+                    <strong style="color: var(--secondary-neon);">2021-2022</strong><br>
+                    Migration to DreadForum. New PGP generated.<br>
+                    <span style="color: var(--text-dim);">Infrastructure remains identical.</span>
+                </div>
+                <div style="position: relative;">
+                    <div style="position: absolute; left: -21px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: #FFB300;"></div>
+                    <strong style="color: #FFB300;">2023-Present</strong><br>
+                    Rebranded identity detected. Active malware distribution.<br>
+                    <span style="color: var(--text-dim);">Confidence: 99% (Infrastructure Match)</span>
+                </div>
+            </div>
+        `;
+        intelModal.style.display = "flex";
+        setTimeout(() => { intelModal.style.opacity = 1; }, 10);
+    });
+
+    document.getElementById("btn-trace-ledger").addEventListener("click", () => {
+        const target = targetLink.textContent.replace("ID: ", "");
+        modalTitle.textContent = `LEDGER TRACE: ${target}`;
+        modalContent.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <h4 style="color: #FFB300; margin-bottom: 20px;">TRANSACTION GRAPH (MOCK)</h4>
+                <div style="display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.5); padding: 30px; border-radius: 8px;">
+                    <div style="border: 1px solid #FFB300; padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">WALLET</div>
+                    <div style="color: var(--primary-neon);">→ 4.5 BTC →</div>
+                    <div style="border: 1px solid var(--secondary-neon); padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">MIXER</div>
+                    <div style="color: var(--primary-neon);">→ 4.4 BTC →</div>
+                    <div style="border: 1px solid #00E676; padding: 10px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">EXCHANGE</div>
+                </div>
+                <p style="margin-top: 20px; color: var(--text-dim);">Ledger integration active. Tracing heuristic: High-risk mixing service.</p>
+            </div>
+        `;
+        intelModal.style.display = "flex";
+        setTimeout(() => { intelModal.style.opacity = 1; }, 10);
+    });
+
     // --- 1. Boot Sequence Animation ---
     const bootLines = [
         "> NTRO KERNEL v4.9.1 BOOTING...",
@@ -217,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // --- 6. Interactivity (Dossier Panel) ---
         cy.on('tap', 'edge', function(evt){
+            dossierActions.style.display = "none";
             const edge = evt.target;
             const source = cy.getElementById(edge.data('source')).data('label');
             const target = cy.getElementById(edge.data('target')).data('label');
@@ -265,6 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         cy.on('tap', 'node', function(evt){
+            dossierActions.style.display = "block";
             const node = evt.target;
             const data = node.data();
             
@@ -354,9 +442,26 @@ document.addEventListener("DOMContentLoaded", () => {
         printElement.style.padding = "20px";
         printElement.style.border = "1px solid #000";
         
-        // Remove close button for print
+        // Remove close button and action buttons for print
         const closeBtn = printElement.querySelector('.btn-close');
         if(closeBtn) closeBtn.remove();
+        
+        const actionsPane = printElement.querySelector('#dossier-actions');
+        if(actionsPane) actionsPane.remove();
+        
+        // Convert text area to a div for printing
+        const notesArea = printElement.querySelector('#analyst-notes');
+        if (notesArea) {
+            const notesText = notesArea.value;
+            const newDiv = document.createElement('div');
+            newDiv.style.border = "1px solid #ccc";
+            newDiv.style.padding = "10px";
+            newDiv.style.marginTop = "5px";
+            newDiv.style.fontSize = "12px";
+            newDiv.style.whiteSpace = "pre-wrap";
+            newDiv.textContent = notesText || "No analyst notes provided.";
+            notesArea.parentNode.replaceChild(newDiv, notesArea);
+        }
         
         const opt = {
           margin:       0.5,
