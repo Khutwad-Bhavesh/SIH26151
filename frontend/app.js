@@ -24,19 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 1.5 Live Threat Feed (Mock) ---
     const alertsTicker = document.getElementById("live-alerts-ticker");
     const mockAlerts = [
-        "🚨 ACTOR MIGRATION: AlphaFox → DarkFox (99% Conf)",
-        "💰 SUSPICIOUS TX: 4.5 BTC to Mixer",
-        "🌐 INFRA CHANGE: New Onion Service Detected",
-        "🔑 PGP ROTATION: ShadowBroker updated keys",
-        "🚨 ALIAS CORRELATION: FoxX matches DarkFox",
-        "⚠️ HIGH RISK: ZeroDay.exe payload seen in MarketA"
+        "[ALERT] ACTOR MIGRATION: AlphaFox → DarkFox (99% Conf)",
+        "[FINANCE] SUSPICIOUS TX: 4.5 BTC to Mixer",
+        "[INFRA] INFRA CHANGE: New Onion Service Detected",
+        "[KEY] PGP ROTATION: ShadowBroker updated keys",
+        "[ALERT] ALIAS CORRELATION: FoxX matches DarkFox",
+        "[RISK] HIGH RISK: ZeroDay.exe payload seen in MarketA"
     ];
     
     setInterval(() => {
         if (Math.random() > 0.4) {
             const alertText = mockAlerts[Math.floor(Math.random() * mockAlerts.length)];
             const div = document.createElement("div");
-            div.style.color = alertText.includes("🚨") ? "var(--secondary-neon)" : (alertText.includes("💰") ? "#FFB300" : "var(--primary-neon)");
+            div.style.color = alertText.includes("[ALERT]") || alertText.includes("[RISK]") ? "var(--secondary-neon)" : (alertText.includes("[FINANCE]") ? "#FFB300" : "var(--primary-neon)");
             div.textContent = `[${new Date().toISOString().substring(11, 19)}] ${alertText}`;
             
             alertsTicker.insertBefore(div, alertsTicker.firstChild);
