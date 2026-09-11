@@ -33,7 +33,8 @@ const bufferCtx = bufferCanvas.getContext('2d');
 // Offscreen buffer for the text mask
 const maskCanvas = document.createElement('canvas');
 const maskCtx = maskCanvas.getContext('2d', { willReadFrequently: true });
-let maskData = null;
+let blockyCanvas = document.createElement('canvas');
+let blockyCtx = blockyCanvas.getContext('2d');
 
 function resize() {
     width = canvas.width = bufferCanvas.width = window.innerWidth;
@@ -60,7 +61,23 @@ function resize() {
     // Move slightly up since the dashboard UI covers the bottom
     maskCtx.fillText('A.T.L.A.S.', width / 2, height / 2 - 50);
     
-    maskData = maskCtx.getImageData(0, 0, width, height).data;
+    const maskData = maskCtx.getImageData(0, 0, width, height).data;
+    
+    // Pre-calculate the blocky grid-aligned mask
+    blockyCanvas.width = width;
+    blockyCanvas.height = height;
+    blockyCtx.fillStyle = '#000000'; // Pure black
+    
+    // Iterate over the grid
+    for (let y = 0; y < height; y += fontSize) {
+        for (let x = 0; x < width; x += fontSize) {
+            const pixelIndex = (y * width + x) * 4;
+            if (maskData[pixelIndex] < 128) {
+                // If inside text, draw a black block for this cell
+                blockyCtx.fillRect(x - fontSize/2, y - fontSize, fontSize + 1, fontSize + 1);
+            }
+        }
+    }
 }
 window.addEventListener('resize', resize);
 resize();
@@ -105,33 +122,16 @@ function drawMatrix() {
         const x = i * fontSize;
         const y = columns[i] * fontSize;
         
-        // Check if current position is inside the text mask
-        let isInsideText = false;
-        if (maskData && y >= 0 && y < height && x >= 0 && x < width) {
-            const pixelIndex = (Math.floor(y) * width + Math.floor(x)) * 4;
-            // Mask is black/white, red channel < 128 means black (inside text)
-            if (maskData[pixelIndex] < 128) {
-                isInsideText = true;
-            }
-        }
+        // Random binary char
+        const char = config.charSet[Math.floor(Math.random() * config.charSet.length)];
         
-        if (!isInsideText) {
-            // Random binary char
-            const char = config.charSet[Math.floor(Math.random() * config.charSet.length)];
-            
-            // Sometimes draw a bright white head character
-            if (Math.random() > 0.8) {
-                bufferCtx.fillStyle = "#FFFFFF";
-                bufferCtx.fillText(char, x, y);
-                bufferCtx.fillStyle = config.tint;
-            } else {
-                bufferCtx.fillText(char, x, y);
-            }
-        } else {
-            // Draw a pure black "void" to ensure the silhouette remains solid
-            bufferCtx.fillStyle = '#000000';
-            bufferCtx.fillRect(x - fontSize/2, y - fontSize, fontSize, fontSize);
+        // Sometimes draw a bright white head character
+        if (Math.random() > 0.8) {
+            bufferCtx.fillStyle = "#FFFFFF";
+            bufferCtx.fillText(char, x, y);
             bufferCtx.fillStyle = config.tint;
+        } else {
+            bufferCtx.fillText(char, x, y);
         }
 
         // Reset drop to top randomly
@@ -213,6 +213,9 @@ function applyPostProcessing() {
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
     }
+    
+    // Draw the final blocky ATLAS silhouette over everything (pure black, pixelated edges)
+    ctx.drawImage(blockyCanvas, 0, 0);
 }
 
 let lastTime = 0;
