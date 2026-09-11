@@ -29,7 +29,7 @@ class GraphBuilder:
         authors = df['author'].unique()
         
         # Hard Identifiers (BTC, PGP)
-        for col, weight, reason_text in [('btc', 2.0, 'Shared BTC Address'), ('pgp', 2.0, 'Shared PGP Key')]:
+        for col, weight, reason_text in [('btc', 8.0, 'CRITICAL: Shared Crypto Wallet Link'), ('pgp', 3.0, 'Shared PGP Key')]:
             if col in df.columns:
                 for val in df[col].dropna().unique():
                     matched = df[df[col] == val]['author'].unique()

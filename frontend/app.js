@@ -124,6 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         metricConfidence.textContent = "0.0%";
                     }
+                    
+                    // Populate Mock Infrastructure Intel
+                    document.getElementById("metric-misconfigs").textContent = Math.floor(Math.random() * 5) + 1;
+                    document.getElementById("metric-ssl").textContent = Math.floor(Math.random() * 3);
                 } else {
                     throw new Error(result.message);
                 }
@@ -298,4 +302,39 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // --- 7. Export Functionality ---
+    document.getElementById("btn-export-json").addEventListener("click", () => {
+        if (!cy) {
+            alert("No data to export. Please run a scan first.");
+            return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cy.json().elements, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "ATLAS_Intelligence_Report.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    });
+
+    document.getElementById("btn-export-csv").addEventListener("click", () => {
+        if (!cy) {
+            alert("No data to export. Please run a scan first.");
+            return;
+        }
+        const nodes = cy.nodes().map(n => n.data());
+        if (nodes.length === 0) return;
+        
+        const headers = Object.keys(nodes[0]).join(",");
+        const rows = nodes.map(n => Object.values(n).map(v => `"${v}"`).join(",")).join("\n");
+        const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows;
+        
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", encodeURI(csvContent));
+        downloadAnchorNode.setAttribute("download", "ATLAS_Node_Report.csv");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    });
 });
