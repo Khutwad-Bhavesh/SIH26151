@@ -68,14 +68,16 @@ function drawPixelWave(time) {
             
             if (sampleX < width && sampleY < height) {
                 const pixelIndex = (sampleY * width + sampleX) * 4;
-                const r = sourceData[pixelIndex];
-                const g = sourceData[pixelIndex + 1];
-                const b = sourceData[pixelIndex + 2];
+                // Boost brightness by 30% for a vivid punch
+                const boost = 1.3;
+                const r = Math.min(255, sourceData[pixelIndex] * boost);
+                const g = Math.min(255, sourceData[pixelIndex + 1] * boost);
+                const b = Math.min(255, sourceData[pixelIndex + 2] * boost);
                 const a = sourceData[pixelIndex + 3];
                 
                 // Animated wave (shimmer)
                 const distance = Math.sqrt(Math.pow(x - width/2, 2) + Math.pow(y - height/2, 2));
-                const wave = Math.sin(distance * 0.01 - time * 0.003) * 0.3 + 0.7; // 0.4 to 1.0 multiplier
+                const wave = Math.sin(distance * 0.01 - time * 0.003) * 0.15 + 0.85; // 0.7 to 1.0 multiplier
                 
                 if (a > 10) {
                     // Draw colored pixel
@@ -114,7 +116,7 @@ function applyPostProcessing() {
 
     // Scanlines (High intensity)
     if (config.pfx.scanLines.enabled) {
-        ctx.fillStyle = `rgba(0, 0, 0, ${(config.pfx.scanLines.intensity / 100) * 0.6})`;
+        ctx.fillStyle = `rgba(0, 0, 0, ${(config.pfx.scanLines.intensity / 100) * 0.3})`;
         for (let i = 0; i < height; i += 4) {
             ctx.fillRect(0, i, width, 2);
         }
