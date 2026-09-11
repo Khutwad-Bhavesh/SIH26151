@@ -285,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelector('.dossier-section:nth-child(3) h4').textContent = "KNOWN IDENTIFIERS";
             evidenceReason.innerHTML = `<ul style="font-size: 13px; color: var(--primary-text);">
                 <li style="margin-bottom: 8px;"><strong>BTC:</strong> <span style="font-family: monospace;">${data.btc}</span></li>
+                <li style="margin-bottom: 8px;"><strong>Infra ID:</strong> <span style="font-family: monospace; color: var(--secondary-neon);">${data.infra}</span></li>
                 <li><strong>GPU Hash:</strong> <span style="font-family: monospace;">${data.gpu}</span></li>
             </ul>`;
             

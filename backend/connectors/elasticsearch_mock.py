@@ -13,12 +13,18 @@ class ElasticsearchConnector:
 
     def _seed_data(self):
         self.data = [
-            {"post_id": 1, "author": "ShadowBroker", "forum": "MarketA", "content": "Selling fresh CVVs. BTC only to 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa. DM me your PGP.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "timestamp": "2023-10-01T23:15:00Z"},
-            {"post_id": 2, "author": "ShadowBroker", "forum": "MarketA", "content": "Restocked the database. Contact me. My key fingerprint is 8F92 3B4C 5D6E 7F8A.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "timestamp": "2023-10-02T00:30:00Z"},
-            {"post_id": 3, "author": "AnonCoder", "forum": "ForumB", "content": "I have an exploit for sale. Price is 0.5 BTC. Send to 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "timestamp": "2023-10-05T23:45:00Z"},
-            {"post_id": 4, "author": "NoobHacker", "forum": "ForumB", "content": "How do I use this tool? Anyone got a tutorial?", "gpu_timing_hash": "INTEL_IRIS_Hash_2B4C", "monitor": "1920x1080", "timestamp": "2023-10-06T14:20:00Z"},
-            {"post_id": 5, "author": "AnonCoder", "forum": "ForumB", "content": "New zero-day available. Hit me up. PGP: 8F92 3B4C 5D6E 7F8A.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "timestamp": "2023-10-08T01:10:00Z"},
-            {"post_id": 6, "author": "RandomUser", "forum": "MarketA", "content": "Thanks for the tutorial! Much appreciated.", "gpu_timing_hash": "INTEL_IRIS_Hash_2B4C", "monitor": "1920x1080", "timestamp": "2023-10-09T15:00:00Z"},
+            {"post_id": 1, "author": "ShadowBroker", "forum": "MarketA", "content": "Selling fresh CVVs. BTC only to 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa. DM me your PGP.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "infrastructure_id": "SRV-SB-01", "timestamp": "2023-10-01T23:15:00Z"},
+            {"post_id": 2, "author": "ShadowBroker", "forum": "MarketA", "content": "Restocked the database. Contact me. My key fingerprint is 8F92 3B4C 5D6E 7F8A.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "infrastructure_id": "SRV-SB-01", "timestamp": "2023-10-02T00:30:00Z"},
+            {"post_id": 3, "author": "AnonCoder", "forum": "ForumB", "content": "I have an exploit for sale. Price is 0.5 BTC. Send to 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "infrastructure_id": "SRV-SB-01", "timestamp": "2023-10-05T23:45:00Z"},
+            {"post_id": 4, "author": "NoobHacker", "forum": "ForumB", "content": "How do I use this tool? Anyone got a tutorial?", "gpu_timing_hash": "INTEL_IRIS_Hash_2B4C", "monitor": "1920x1080", "infrastructure_id": "SRV-NH-99", "timestamp": "2023-10-06T14:20:00Z"},
+            {"post_id": 5, "author": "AnonCoder", "forum": "ForumB", "content": "New zero-day available. Hit me up. PGP: 8F92 3B4C 5D6E 7F8A.", "gpu_timing_hash": "NVIDIA_RTX3080_Hash_7F9A", "monitor": "2560x1440", "infrastructure_id": "SRV-SB-01", "timestamp": "2023-10-08T01:10:00Z"},
+            {"post_id": 6, "author": "RandomUser", "forum": "MarketA", "content": "Thanks for the tutorial! Much appreciated.", "gpu_timing_hash": "INTEL_IRIS_Hash_2B4C", "monitor": "1920x1080", "infrastructure_id": "SRV-RU-02", "timestamp": "2023-10-09T15:00:00Z"},
+            
+            # The Fox Rebranding Timeline
+            {"post_id": 101, "author": "AlphaFox", "forum": "MarketAlpha", "content": "Welcome to my market. PGP: AAAA BBBB CCCC DDDD", "infrastructure_id": "SRV-NGINX-SSH-99X8", "timestamp": "2019-10-01T12:00:00Z"},
+            {"post_id": 102, "author": "AlphaFox", "forum": "MarketAlpha", "content": "Market closing down. Thanks for the money.", "infrastructure_id": "SRV-NGINX-SSH-99X8", "timestamp": "2020-05-01T12:00:00Z"},
+            {"post_id": 103, "author": "DarkFox", "forum": "DreadForum", "content": "I am opening a new market. New PGP: 1111 2222 3333 4444", "infrastructure_id": "SRV-NGINX-SSH-99X8", "timestamp": "2021-03-01T12:00:00Z"},
+            {"post_id": 104, "author": "FoxX", "forum": "DreadForum", "content": "Rebranded to FoxX for better OPSEC. New keys: FFFF EEEE DDDD CCCC", "infrastructure_id": "SRV-NGINX-SSH-99X8", "timestamp": "2023-08-01T12:00:00Z"},
         ]
 
     def query(self, target=None):
@@ -42,10 +48,11 @@ class ElasticsearchConnector:
         random_pgp = f"{name_hash[0:4]} {name_hash[4:8]} {name_hash[8:12]} {name_hash[12:16]}".upper()
         random_btc = f"1A1zP1eP5QG{name_hash[0:15]}DivfNa"
         gpu = f"AMD_RX6800_Hash_{name_hash[0:4].upper()}"
+        infra_id = f"SRV-LIVE-{name_hash[0:6].upper()}"
         
         simulated_data = [
-            {"post_id": 901, "author": target, "forum": "DreadForum", "content": f"New database dump available. Contact me. PGP: {random_pgp}", "gpu_timing_hash": gpu, "monitor": "1920x1080", "timestamp": "2023-11-01T02:15:00Z"},
-            {"post_id": 902, "author": f"{target}_Alt", "forum": "MarketB", "content": f"Vouching for the dump. Payment sent to BTC: {random_btc}", "gpu_timing_hash": gpu, "monitor": "1920x1080", "timestamp": "2023-11-01T02:20:00Z"},
-            {"post_id": 903, "author": "Buyer_Unknown", "forum": "DreadForum", "content": f"Transaction successful. Smooth escrow. Sent BTC: {random_btc}", "gpu_timing_hash": "NVIDIA_GTX1060_Hash_99AA", "monitor": "2560x1440", "timestamp": "2023-11-02T04:10:00Z"}
+            {"post_id": 901, "author": target, "forum": "DreadForum", "content": f"New database dump available. Contact me. PGP: {random_pgp}", "gpu_timing_hash": gpu, "monitor": "1920x1080", "infrastructure_id": infra_id, "timestamp": "2023-11-01T02:15:00Z"},
+            {"post_id": 902, "author": f"{target}_Alt", "forum": "MarketB", "content": f"Vouching for the dump. Payment sent to BTC: {random_btc}", "gpu_timing_hash": gpu, "monitor": "1920x1080", "infrastructure_id": infra_id, "timestamp": "2023-11-01T02:20:00Z"},
+            {"post_id": 903, "author": "Buyer_Unknown", "forum": "DreadForum", "content": f"Transaction successful. Smooth escrow. Sent BTC: {random_btc}", "gpu_timing_hash": "NVIDIA_GTX1060_Hash_99AA", "monitor": "2560x1440", "infrastructure_id": "SRV-UNKNOWN", "timestamp": "2023-11-02T04:10:00Z"}
         ]
         self.data.extend(simulated_data)

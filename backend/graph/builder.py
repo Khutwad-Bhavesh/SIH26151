@@ -28,8 +28,12 @@ class GraphBuilder:
 
         authors = df['author'].unique()
         
-        # Hard Identifiers (BTC, PGP)
-        for col, weight, reason_text in [('btc', 8.0, 'CRITICAL: Shared Crypto Wallet Link'), ('pgp', 3.0, 'Shared PGP Key')]:
+        # Hard Identifiers (BTC, PGP, Infra)
+        for col, weight, reason_text in [
+            ('infrastructure_id', 10.0, 'CRITICAL: Shared Infrastructure / SSH Key'),
+            ('btc', 8.0, 'CRITICAL: Shared Crypto Wallet Link'), 
+            ('pgp', 3.0, 'Shared PGP Key')
+        ]:
             if col in df.columns:
                 for val in df[col].dropna().unique():
                     matched = df[df[col] == val]['author'].unique()
@@ -98,6 +102,7 @@ class GraphBuilder:
             pgp = author_df['pgp'].dropna().iloc[0] if 'pgp' in author_df.columns and not author_df['pgp'].dropna().empty else "UNKNOWN"
             btc = author_df['btc'].dropna().iloc[0] if 'btc' in author_df.columns and not author_df['btc'].dropna().empty else "UNKNOWN"
             gpu = author_df['gpu_timing_hash'].dropna().iloc[0] if 'gpu_timing_hash' in author_df.columns and not author_df['gpu_timing_hash'].dropna().empty else "UNKNOWN"
+            infra = author_df['infrastructure_id'].dropna().iloc[0] if 'infrastructure_id' in author_df.columns and not author_df['infrastructure_id'].dropna().empty else "UNKNOWN"
             
             nodes.append({
                 "data": {
@@ -106,7 +111,8 @@ class GraphBuilder:
                     "cluster": cluster_id,
                     "pgp": pgp,
                     "btc": btc,
-                    "gpu": gpu
+                    "gpu": gpu,
+                    "infra": infra
                 }
             })
         
