@@ -396,10 +396,12 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("No data to export. Please run a scan first.");
             return;
         }
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cy.json().elements, null, 2));
+        const jsonStr = JSON.stringify(cy.json().elements, null, 2);
+        const blob = new Blob([jsonStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
         const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "ATLAS_Intelligence_Report.json");
+        downloadAnchorNode.href = url;
+        downloadAnchorNode.download = "ATLAS_Intelligence_Report.json";
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
@@ -415,11 +417,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const headers = Object.keys(nodes[0]).join(",");
         const rows = nodes.map(n => Object.values(n).map(v => `"${v}"`).join(",")).join("\n");
-        const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows;
+        const csvContent = headers + "\n" + rows;
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
         
         const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", encodeURI(csvContent));
-        downloadAnchorNode.setAttribute("download", "ATLAS_Node_Report.csv");
+        downloadAnchorNode.href = url;
+        downloadAnchorNode.download = "ATLAS_Node_Report.csv";
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
@@ -431,49 +435,46 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         
-        const printElement = evidencePanel.cloneNode(true);
-        // Force printable styles
-        printElement.style.background = "#ffffff";
-        printElement.style.color = "#000000";
-        printElement.style.padding = "20px";
-        printElement.style.border = "1px solid #000";
+        const evidencePanel = document.getElementById("evidence-panel");
         
-        // Remove text elements that are paper/fog color and force to black
-        const textElements = printElement.querySelectorAll('*');
-        textElements.forEach(el => {
-            el.style.color = "#000000";
-            if (el.tagName === 'BUTTON') el.remove();
-        });
+        // Hide UI elements we don't want in the PDF
+        const actionsPane = document.getElementById('dossier-actions');
+        const closeBtn = document.querySelector('.btn-close');
+        if (actionsPane) actionsPane.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'none';
         
-        // Remove close button and action buttons for print
-        const closeBtn = printElement.querySelector('.btn-close');
-        if(closeBtn) closeBtn.remove();
-        
-        const actionsPane = printElement.querySelector('#dossier-actions');
-        if(actionsPane) actionsPane.remove();
-        
-        // Convert text area to a div for printing
-        const notesArea = printElement.querySelector('#analyst-notes');
+        // Convert text area to a div temporarily for printing
+        const notesArea = document.getElementById('analyst-notes');
+        let tempDiv = null;
         if (notesArea) {
-            const notesText = notesArea.value;
-            const newDiv = document.createElement('div');
-            newDiv.style.border = "1px solid #ccc";
-            newDiv.style.padding = "10px";
-            newDiv.style.marginTop = "5px";
-            newDiv.style.fontSize = "12px";
-            newDiv.style.whiteSpace = "pre-wrap";
-            newDiv.textContent = notesText || "No analyst notes provided.";
-            notesArea.parentNode.replaceChild(newDiv, notesArea);
+            tempDiv = document.createElement('div');
+            tempDiv.style.border = "1px solid var(--line)";
+            tempDiv.style.padding = "10px";
+            tempDiv.style.marginTop = "5px";
+            tempDiv.style.fontSize = "12px";
+            tempDiv.style.whiteSpace = "pre-wrap";
+            tempDiv.style.color = "var(--paper)";
+            tempDiv.textContent = notesArea.value || "No analyst notes provided.";
+            notesArea.parentNode.insertBefore(tempDiv, notesArea);
+            notesArea.style.display = 'none';
         }
         
         const opt = {
-          margin:       0.5,
+          margin:       0.2,
           filename:     'ATLAS_Executive_Report.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2 },
+          html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0D1013' },
           jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(printElement).save();
+        html2pdf().set(opt).from(evidencePanel).save().then(() => {
+            // Restore UI
+            if (actionsPane) actionsPane.style.display = 'block';
+            if (closeBtn) closeBtn.style.display = 'block';
+            if (notesArea) {
+                notesArea.style.display = 'block';
+                if (tempDiv) tempDiv.remove();
+            }
+        });
     });
 });
