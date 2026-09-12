@@ -434,45 +434,54 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("No dossier selected. Please click on a target node first to generate a report.");
             return;
         }
+        // Create a normalized clone for html2canvas to render reliably
+        const clone = evidencePanel.cloneNode(true);
+        clone.style.position = "absolute";
+        clone.style.top = "0";
+        clone.style.left = "0";
+        clone.style.zIndex = "-9999"; // Hide behind everything
+        clone.style.width = "400px";
+        clone.style.background = "#0D1013"; // Force solid background
+        clone.style.border = "1px solid #E8A33D"; // Add a nice gold border for the report
+        clone.style.transform = "none";
+        clone.style.transition = "none";
+        clone.style.opacity = "1";
         
-        // Hide UI elements we don't want in the PDF
-        const actionsPane = document.getElementById('dossier-actions');
-        const closeBtn = document.querySelector('.btn-close');
-        if (actionsPane) actionsPane.style.display = 'none';
-        if (closeBtn) closeBtn.style.display = 'none';
+        // Remove interactive elements from the clone
+        const cloneActions = clone.querySelector('#dossier-actions');
+        if (cloneActions) cloneActions.remove();
+        const cloneClose = clone.querySelector('.btn-close');
+        if (cloneClose) cloneClose.remove();
         
-        // Convert text area to a div temporarily for printing
-        const notesArea = document.getElementById('analyst-notes');
-        let tempDiv = null;
-        if (notesArea) {
-            tempDiv = document.createElement('div');
-            tempDiv.style.border = "1px solid var(--line)";
-            tempDiv.style.padding = "10px";
-            tempDiv.style.marginTop = "5px";
-            tempDiv.style.fontSize = "12px";
-            tempDiv.style.whiteSpace = "pre-wrap";
-            tempDiv.style.color = "var(--paper)";
-            tempDiv.textContent = notesArea.value || "No analyst notes provided.";
-            notesArea.parentNode.insertBefore(tempDiv, notesArea);
-            notesArea.style.display = 'none';
+        // Convert text area to a printable div
+        const originalNotes = document.getElementById('analyst-notes');
+        const cloneNotes = clone.querySelector('#analyst-notes');
+        if (cloneNotes && originalNotes) {
+            const newDiv = document.createElement('div');
+            newDiv.style.border = "1px solid var(--line)";
+            newDiv.style.padding = "10px";
+            newDiv.style.marginTop = "5px";
+            newDiv.style.fontSize = "12px";
+            newDiv.style.whiteSpace = "pre-wrap";
+            newDiv.style.color = "var(--paper)";
+            newDiv.textContent = originalNotes.value || "No analyst notes provided.";
+            cloneNotes.parentNode.replaceChild(newDiv, cloneNotes);
         }
+        
+        // Append to DOM so html2canvas can calculate its geometry
+        document.body.appendChild(clone);
         
         const opt = {
           margin:       0.2,
           filename:     'ATLAS_Executive_Report.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0D1013' },
+          html2canvas:  { scale: 2, useCORS: true },
           jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(evidencePanel).save().then(() => {
-            // Restore UI
-            if (actionsPane) actionsPane.style.display = 'block';
-            if (closeBtn) closeBtn.style.display = 'block';
-            if (notesArea) {
-                notesArea.style.display = 'block';
-                if (tempDiv) tempDiv.remove();
-            }
+        html2pdf().set(opt).from(clone).save().then(() => {
+            // Clean up the clone after PDF is generated
+            clone.remove();
         });
     });
 });
