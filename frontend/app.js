@@ -435,8 +435,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         
-        const evidencePanel = document.getElementById("evidence-panel");
-        
         // Hide UI elements we don't want in the PDF
         const actionsPane = document.getElementById('dossier-actions');
         const closeBtn = document.querySelector('.btn-close');
