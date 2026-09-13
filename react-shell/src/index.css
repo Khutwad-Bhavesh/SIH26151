@@ -82,3 +82,22 @@ body, html, #root {
   z-index: 50;
   opacity: 0.3;
 }
+
+/* Global Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+  border-left: 1px solid #1e293b; /* slate-800 */
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.5); /* emerald-500 with opacity */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.8);
+}
+::-webkit-scrollbar-corner {
+  background: #0f172a;
+}
