@@ -287,14 +287,31 @@ document.addEventListener("DOMContentLoaded", () => {
                         'shadow-opacity': 1
                     }
                 }
-            ],
-            layout: {
-                name: 'cose',
-                padding: 50,
-                animate: true,
-                animationDuration: 1500,
-                nodeRepulsion: 400000,
-                idealEdgeLength: 100
+            ]
+        });
+
+        // Wait for the React parent to tell us to start the layout to prevent CPU/GPU bottlenecking
+        window.addEventListener('message', (event) => {
+            if (event.data === 'START_LAYOUT') {
+                const layout = cy.layout({
+                    name: 'cose',
+                    animate: true,
+                    animationDuration: 1500,
+                    animationEasing: 'ease-out-quint',
+                    randomize: true,
+                    componentSpacing: 100,
+                    nodeRepulsion: 400000,
+                    nodeOverlap: 10,
+                    idealEdgeLength: 100,
+                    edgeElasticity: 100,
+                    nestingFactor: 5,
+                    gravity: 80,
+                    numIter: 1000,
+                    initialTemp: 200,
+                    coolingFactor: 0.95,
+                    minTemp: 1.0
+                });
+                layout.run();
             }
         });
 

@@ -32,6 +32,12 @@ function App() {
   // Handle Video ends
   const onStartVideoEnd = () => {
     setAppState(STATE.DASHBOARD)
+    
+    // Tell the iframe to start the expensive graph layout now that the video is done
+    const iframe = document.getElementById('dashboard-frame')
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage('START_LAYOUT', '*')
+    }
   }
 
   const onEndVideoEnd = () => {
@@ -67,6 +73,7 @@ function App() {
       >
         {/* We assume FastAPI will serve the vanilla dashboard at /dashboard.html */}
         <iframe 
+          id="dashboard-frame"
           src="/dashboard.html" 
           className="w-full h-full border-none" 
           title="A.T.L.A.S. Dashboard"
