@@ -42,9 +42,11 @@ function App() {
   // Play videos explicitly when they mount in state
   useEffect(() => {
     if (appState === STATE.START_VIDEO && startVideoRef.current) {
+      startVideoRef.current.playbackRate = 1.5
       startVideoRef.current.play().catch(e => console.error("Play failed:", e))
     }
     if (appState === STATE.END_VIDEO && endVideoRef.current) {
+      endVideoRef.current.playbackRate = 1.5
       endVideoRef.current.play().catch(e => console.error("Play failed:", e))
     }
   }, [appState])
