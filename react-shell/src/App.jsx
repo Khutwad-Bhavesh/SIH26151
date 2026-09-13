@@ -133,7 +133,7 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5 }}
             className="absolute inset-0 z-20 bg-black flex items-center justify-center"
           >
             <video 
@@ -144,6 +144,13 @@ function App() {
               playsInline
               muted
             />
+            
+            <button
+              onClick={onStartVideoEnd}
+              className="absolute bottom-8 right-8 text-slate-400 hover:text-white font-mono text-xs tracking-[0.2em] uppercase flex items-center gap-2 z-50 transition-all bg-black/50 px-6 py-2 border border-slate-700 hover:border-emerald-500 hover:text-emerald-400 backdrop-blur-sm cursor-pointer"
+            >
+              Skip to Dashboard <span className="text-emerald-500 font-bold">►►</span>
+            </button>
           </motion.div>
         )}
 
@@ -158,8 +165,8 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 z-20 bg-black flex items-center justify-center"
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0 z-50 bg-black flex items-center justify-center pointer-events-auto"
           >
             <video 
               ref={endVideoRef}
@@ -169,6 +176,13 @@ function App() {
               playsInline
               muted
             />
+            
+            <button
+              onClick={onEndVideoEnd}
+              className="absolute bottom-8 right-8 text-slate-400 hover:text-white font-mono text-xs tracking-[0.2em] uppercase flex items-center gap-2 z-50 transition-all bg-black/50 px-6 py-2 border border-slate-700 hover:border-red-500 hover:text-red-400 backdrop-blur-sm cursor-pointer"
+            >
+              Force Terminate <span className="text-red-500 font-bold">►►</span>
+            </button>
           </motion.div>
         )}
 
