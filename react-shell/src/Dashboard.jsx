@@ -234,16 +234,17 @@ export default function Dashboard({ onTerminate }) {
               transition={{ delay: i * 0.02, type: 'spring' }}
               whileHover={{ scale: 1.2 }}
               onClick={(e) => { e.stopPropagation(); setSelectedNode(node); setSelectedEdge(null); }}
-              className={`absolute w-6 h-6 flex items-center justify-center cursor-pointer transform -translate-x-1/2 -translate-y-1/2
+              className={`absolute w-6 h-6 flex items-center justify-center cursor-pointer
                 ${isSelected ? 'bg-emerald-500 shadow-[0_0_20px_#22C55E]' : 'bg-[#E8A33D] shadow-[0_0_10px_#E8A33D] opacity-80'}
               `}
-              style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
+              style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', left: 0, top: 0 }}
             >
-              {isSelected && (
-                <div className="absolute top-8 text-xs font-bold text-emerald-400 whitespace-nowrap bg-black/80 px-2 py-1 rounded border border-emerald-500/30">
-                  {node.label}
-                </div>
-              )}
+              {/* Node Label (Always Visible) */}
+              <div className={`absolute top-8 text-[10px] font-bold whitespace-nowrap px-2 py-1 rounded 
+                ${isSelected ? 'text-emerald-400 bg-black border border-emerald-500/30' : 'text-slate-400 bg-black/50'}
+              `}>
+                {node.label}
+              </div>
             </motion.div>
           )
         })}
