@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { LogOut, Terminal, Activity } from 'lucide-react'
+import { Terminal } from 'lucide-react'
+import Dashboard from './Dashboard'
 
 // App States
 const STATE = {
@@ -32,12 +33,6 @@ function App() {
   // Handle Video ends
   const onStartVideoEnd = () => {
     setAppState(STATE.DASHBOARD)
-    
-    // Tell the iframe to start the expensive graph layout now that the video is done
-    const iframe = document.getElementById('dashboard-frame')
-    if (iframe && iframe.contentWindow) {
-      iframe.contentWindow.postMessage('START_LAYOUT', '*')
-    }
   }
 
   const onEndVideoEnd = () => {
@@ -59,49 +54,12 @@ function App() {
       
       {/* 
         ========================================================================
-        IFRAME: ALWAYS MOUNTED (ADHD Architecture)
-        We mount the heavy Cytoscape vanilla JS dashboard immediately in the background.
-        We only toggle its opacity/pointer-events to avoid mounting jank during transition.
+        STATE: NATIVE DASHBOARD (ADHD Headless Architecture)
         ========================================================================
       */}
-      <div 
-        className="absolute inset-0 z-0 transition-opacity duration-1000"
-        style={{
-          opacity: appState === STATE.DASHBOARD ? 1 : 0,
-          pointerEvents: appState === STATE.DASHBOARD ? 'auto' : 'none'
-        }}
-      >
-        {/* We assume FastAPI will serve the vanilla dashboard at /dashboard.html */}
-        <iframe 
-          id="dashboard-frame"
-          src="/dashboard.html" 
-          className="w-full h-full border-none" 
-          title="A.T.L.A.S. Dashboard"
-        />
-        
-        {/* React Shell Overlay Controls (Floating above Vanilla Iframe) */}
-        {appState === STATE.DASHBOARD && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="absolute top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-2 bg-black/60 backdrop-blur-md border border-red-500/30 rounded-full shadow-[0_0_15px_rgba(255,0,0,0.3)]"
-          >
-            <div className="flex items-center gap-2 text-red-500 font-mono text-xs uppercase tracking-widest">
-              <Activity className="w-4 h-4 animate-pulse" />
-              Live Feed
-            </div>
-            <div className="w-px h-4 bg-red-500/30 mx-2"></div>
-            <button 
-              onClick={handleQuitDashboard}
-              className="flex items-center gap-2 text-white/80 hover:text-white transition-colors text-sm font-semibold uppercase tracking-wider"
-            >
-              <LogOut className="w-4 h-4" />
-              Terminate Link
-            </button>
-          </motion.div>
-        )}
-      </div>
+      {appState === STATE.DASHBOARD && (
+        <Dashboard onTerminate={handleQuitDashboard} />
+      )}
 
       <AnimatePresence>
         {/* 
@@ -118,7 +76,6 @@ function App() {
             transition={{ duration: 0.5 }}
             className="absolute inset-0 z-10 bg-base flex items-center justify-center"
           >
-            {/* Vengeance UI Dark Overlay */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
 
             <motion.div 
