@@ -262,7 +262,9 @@ export default function Dashboard({ onTerminate }) {
         <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0">
           {/* LOGO */}
           <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
-            <Activity className="text-emerald-500 w-6 h-6 animate-pulse" />
+            <div className="relative w-8 h-8">
+              <img src="/source_image.png" alt="A.T.L.A.S." className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+            </div>
             <div>
               <div className="text-emerald-500 font-bold text-sm tracking-widest glitch-text" data-text="A.T.L.A.S.">A.T.L.A.S.</div>
               <div className="text-[10px] text-slate-500">INTELLIGENCE COMMAND</div>
