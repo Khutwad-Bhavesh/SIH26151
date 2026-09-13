@@ -85,23 +85,39 @@ function App() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="relative z-20 flex flex-col items-center gap-8"
+              className="relative z-20 flex flex-col items-center gap-12"
             >
-              <h1 
-                className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500 glitch-text uppercase tracking-tighter"
-                data-text="SYSTEM OFFLINE"
+              <motion.div 
+                initial={{ letterSpacing: '0.8em', opacity: 0, scale: 0.9 }}
+                animate={{ letterSpacing: '0.2em', opacity: 1, scale: 1 }}
+                transition={{ duration: 2, ease: "easeOut" }}
+                className="flex flex-col items-center"
               >
-                SYSTEM OFFLINE
-              </h1>
+                <h1 className="text-7xl md:text-9xl font-black text-white uppercase" style={{ textShadow: '0 0 40px rgba(255,255,255,0.3), 0 0 100px rgba(34,197,94,0.2)' }}>
+                  A.T.L.A.S.
+                </h1>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5, duration: 1 }}
+                  className="text-[#E8A33D] font-mono text-xs md:text-sm tracking-[0.5em] uppercase mt-6 flex items-center gap-4 opacity-90"
+                >
+                  <span className="w-8 md:w-16 h-[1px] bg-[#E8A33D]/50"></span>
+                  Advanced Threat & Link Analysis System
+                  <span className="w-8 md:w-16 h-[1px] bg-[#E8A33D]/50"></span>
+                </motion.div>
+              </motion.div>
               
-              <button 
+              <motion.button 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.5, duration: 1 }}
                 onClick={handleEnterDashboard}
-                className="group relative px-8 py-4 bg-gold/10 border border-gold hover:bg-gold/20 transition-all duration-300 overflow-hidden flex items-center gap-3"
+                className="px-8 py-4 border border-emerald-500/50 text-emerald-500 font-mono tracking-[0.3em] uppercase text-sm hover:bg-emerald-500 hover:text-black transition-all duration-300 flex items-center gap-3 group shadow-[0_0_15px_rgba(34,197,94,0.1)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] backdrop-blur-sm"
               >
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                <Terminal className="text-gold w-6 h-6" />
-                <span className="text-gold font-mono uppercase tracking-[0.2em] font-semibold">Initiate Sequence</span>
-              </button>
+                <Terminal className="w-5 h-5 group-hover:animate-pulse" />
+                Initiate Sequence
+              </motion.button>
             </motion.div>
           </motion.div>
         )}
