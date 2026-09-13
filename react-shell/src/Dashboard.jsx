@@ -261,7 +261,7 @@ export default function Dashboard({ onTerminate }) {
         
         <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0">
           {/* LOGO */}
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+          <div className="bg-black/40 border border-slate-800 p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
             <div className="relative w-8 h-8">
               <img src="/source_image.png" alt="A.T.L.A.S." className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
             </div>
@@ -272,7 +272,7 @@ export default function Dashboard({ onTerminate }) {
           </div>
 
           {/* SEARCH BAR (Magnifying Glass) */}
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 pointer-events-auto flex-shrink-0">
+          <div className="bg-black/40 border border-slate-800 p-4 pointer-events-auto flex-shrink-0">
             <div className="text-[10px] text-slate-500 mb-2 uppercase tracking-widest">Analysis Controls</div>
             <div className="relative group mb-3">
               <input 
@@ -297,7 +297,7 @@ export default function Dashboard({ onTerminate }) {
           </div>
 
           {/* LIVE THREAT FEED */}
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex-shrink-0">
+          <div className="bg-black/40 border border-slate-800 p-4 flex-shrink-0">
             <div className="text-[10px] text-emerald-500 mb-2 uppercase tracking-widest flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               Live Threat Feed
@@ -321,22 +321,22 @@ export default function Dashboard({ onTerminate }) {
 
           {/* BENTO GRID - GLOBAL METRICS */}
           <div className="grid grid-cols-2 gap-2 flex-shrink-0">
-            <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+            <div className="bg-black/40 border border-slate-800 p-3 flex flex-col items-center justify-center">
               <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Identities</div>
               <div className="text-xl font-bold text-white">{nodes.length}</div>
             </div>
-            <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+            <div className="bg-black/40 border border-slate-800 p-3 flex flex-col items-center justify-center">
               <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Correlations</div>
               <div className="text-xl font-bold text-white">{edges.length}</div>
             </div>
-            <div className="col-span-2 bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+            <div className="col-span-2 bg-black/40 border border-slate-800 p-3 flex flex-col items-center justify-center">
               <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Avg Confidence</div>
               <div className="text-xl font-bold text-emerald-500">{avgConfidence}</div>
             </div>
           </div>
 
           {/* INFRASTRUCTURE INTEL */}
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 text-xs flex-shrink-0">
+          <div className="bg-black/40 border border-slate-800 p-4 text-xs flex-shrink-0">
             <div className="flex justify-between mb-2">
               <span className="text-slate-500">Tor Misconfigs</span>
               <span className="text-red-400 font-bold">{misconfigs}</span>
@@ -349,7 +349,7 @@ export default function Dashboard({ onTerminate }) {
         </div>
 
         {/* TERMINAL / LOGGER */}
-        <div className="mt-auto flex-1 min-h-[120px] max-h-[200px] bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex flex-col text-[10px] pointer-events-auto">
+        <div className="mt-auto flex-1 min-h-[120px] max-h-[200px] bg-black/40 border border-slate-800 p-4 flex flex-col text-[10px] pointer-events-auto">
           <div className="text-slate-500 uppercase font-bold tracking-widest border-b border-slate-800 pb-2 mb-2 flex justify-between">
             <span>Subsystem Logs</span>
             <span className="text-emerald-500/50 block">v4.9.1</span>
@@ -385,9 +385,9 @@ export default function Dashboard({ onTerminate }) {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: "spring", damping: 20 }}
-            className="absolute top-0 right-0 w-[400px] h-full bg-[#0f172a]/95 backdrop-blur-2xl border-l border-slate-800 flex flex-col z-50 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] pointer-events-auto"
+            className="absolute top-0 right-0 w-[400px] h-full bg-[#0f172a]/70 border-l border-slate-800 flex flex-col z-50 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] pointer-events-auto"
           >
-            <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-black/50">
+            <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-black/40">
               <h3 className="text-emerald-500 font-bold uppercase tracking-widest text-sm flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4" /> 
                 {selectedNode ? "TARGET DOSSIER" : "LINK ANALYSIS"}
@@ -500,7 +500,7 @@ export default function Dashboard({ onTerminate }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center pointer-events-auto"
+            className="absolute inset-0 bg-black/60 z-[100] flex items-center justify-center pointer-events-auto"
             onClick={() => setActiveModal(null)}
           >
             <motion.div 
