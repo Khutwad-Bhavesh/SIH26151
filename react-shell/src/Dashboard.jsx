@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion'
 import cytoscape from 'cytoscape'
 import { FileJson, FileText, FileDown, Search, X, ShieldAlert, Activity, AlertTriangle, Fingerprint, Network, TerminalSquare } from 'lucide-react'
 import html2pdf from 'html2pdf.js'
+import DitherCanvas from './DitherCanvas'
 
 export default function Dashboard({ onTerminate }) {
   const [nodes, setNodes] = useState([])
@@ -176,8 +177,11 @@ export default function Dashboard({ onTerminate }) {
   return (
     <div className="w-full h-full relative bg-[#020617] text-slate-100 overflow-hidden font-mono select-none">
       
+      {/* MAGNIFYING DITHER BACKGROUND */}
+      <DitherCanvas />
+
       {/* BACKGROUND GRID */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      <div className="absolute inset-0 opacity-10 pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
       
       {/* 
         ========================================

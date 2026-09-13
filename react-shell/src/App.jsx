@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal } from 'lucide-react'
 import Dashboard from './Dashboard'
-import DitherCanvas from './DitherCanvas'
 
 // App States
 const STATE = {
@@ -75,10 +74,8 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 z-10 flex items-center justify-center"
+            className="absolute inset-0 z-10 bg-base flex items-center justify-center"
           >
-            {/* The animated dither canvas background */}
-            <DitherCanvas />
             
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 pointer-events-none"></div>
 
