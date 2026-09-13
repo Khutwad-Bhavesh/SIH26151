@@ -252,90 +252,108 @@ export default function Dashboard({ onTerminate }) {
       */}
 
       {/* LEFT SIDEBAR */}
-      <div className="absolute top-6 left-6 w-80 flex flex-col gap-4 pointer-events-none z-40">
+      <div className="absolute top-6 left-6 bottom-6 w-80 flex flex-col gap-4 pointer-events-none z-40">
         
-        {/* LOGO */}
-        <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
-          <Activity className="text-emerald-500 w-6 h-6 animate-pulse" />
-          <div>
-            <div className="text-emerald-500 font-bold text-sm tracking-widest glitch-text" data-text="A.T.L.A.S.">A.T.L.A.S.</div>
-            <div className="text-[10px] text-slate-500">INTELLIGENCE COMMAND</div>
+        <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0">
+          {/* LOGO */}
+          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+            <Activity className="text-emerald-500 w-6 h-6 animate-pulse" />
+            <div>
+              <div className="text-emerald-500 font-bold text-sm tracking-widest glitch-text" data-text="A.T.L.A.S.">A.T.L.A.S.</div>
+              <div className="text-[10px] text-slate-500">INTELLIGENCE COMMAND</div>
+            </div>
           </div>
-        </div>
 
-        {/* SEARCH BAR (Magnifying Glass) */}
-        <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 pointer-events-auto">
-          <div className="text-[10px] text-slate-500 mb-2 uppercase tracking-widest">Analysis Controls</div>
-          <div className="relative group mb-3">
-            <input 
-              type="text" 
-              placeholder="ENTER TARGET ALIAS..." 
-              value={targetQuery}
-              onChange={e => setTargetQuery(e.target.value)}
-              className="bg-black border border-slate-700 focus:border-emerald-500 w-full px-3 py-2 text-xs outline-none transition-colors"
-            />
-            <button className="absolute right-0 top-0 h-full px-3 text-emerald-500 hover:text-white transition-colors">
-              <Search className="w-4 h-4" />
+          {/* SEARCH BAR (Magnifying Glass) */}
+          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 pointer-events-auto flex-shrink-0">
+            <div className="text-[10px] text-slate-500 mb-2 uppercase tracking-widest">Analysis Controls</div>
+            <div className="relative group mb-3">
+              <input 
+                type="text" 
+                placeholder="ENTER TARGET ALIAS..." 
+                value={targetQuery}
+                onChange={e => setTargetQuery(e.target.value)}
+                className="bg-black border border-slate-700 focus:border-emerald-500 w-full px-3 py-2 text-xs outline-none transition-colors"
+              />
+              <button className="absolute right-0 top-0 h-full px-3 text-emerald-500 hover:text-white transition-colors">
+                <Search className="w-4 h-4" />
+              </button>
+            </div>
+            <button 
+              onClick={runScan}
+              disabled={isScanning}
+              className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-colors py-2 text-xs font-bold tracking-widest uppercase flex justify-center gap-2"
+            >
+              {isScanning ? <Activity className="w-4 h-4 animate-spin" /> : <TerminalSquare className="w-4 h-4" />}
+              {isScanning ? 'SCAN IN PROGRESS...' : 'INITIALIZE OSINT SCAN'}
             </button>
           </div>
-          <button 
-            onClick={runScan}
-            disabled={isScanning}
-            className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-colors py-2 text-xs font-bold tracking-widest uppercase flex justify-center gap-2"
-          >
-            {isScanning ? <Activity className="w-4 h-4 animate-spin" /> : <TerminalSquare className="w-4 h-4" />}
-            {isScanning ? 'SCAN IN PROGRESS...' : 'INITIALIZE OSINT SCAN'}
-          </button>
+
+          {/* LIVE THREAT FEED */}
+          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex-shrink-0">
+            <div className="text-[10px] text-emerald-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              Live Threat Feed
+            </div>
+            <div className="h-24 overflow-hidden flex flex-col gap-2 text-[10px]">
+              <AnimatePresence>
+                {liveAlerts.map(alert => (
+                  <motion.div 
+                    key={alert.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={alert.text.includes('[ALERT]') || alert.text.includes('[RISK]') ? 'text-red-400' : alert.text.includes('[FINANCE]') ? 'text-gold' : 'text-slate-300'}
+                  >
+                    {alert.text}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* BENTO GRID - GLOBAL METRICS */}
+          <div className="grid grid-cols-2 gap-2 flex-shrink-0">
+            <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Identities</div>
+              <div className="text-xl font-bold text-white">{nodes.length}</div>
+            </div>
+            <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Correlations</div>
+              <div className="text-xl font-bold text-white">{edges.length}</div>
+            </div>
+            <div className="col-span-2 bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
+              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Avg Confidence</div>
+              <div className="text-xl font-bold text-emerald-500">{avgConfidence}</div>
+            </div>
+          </div>
+
+          {/* INFRASTRUCTURE INTEL */}
+          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 text-xs flex-shrink-0">
+            <div className="flex justify-between mb-2">
+              <span className="text-slate-500">Tor Misconfigs</span>
+              <span className="text-red-400 font-bold">{misconfigs}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">SSL Clearnet Leaks</span>
+              <span className="text-red-400 font-bold">{sslLeaks}</span>
+            </div>
+          </div>
         </div>
 
-        {/* LIVE THREAT FEED */}
-        <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4">
-          <div className="text-[10px] text-emerald-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            Live Threat Feed
+        {/* TERMINAL / LOGGER */}
+        <div className="mt-auto flex-1 min-h-[120px] max-h-[200px] bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex flex-col text-[10px] pointer-events-auto">
+          <div className="text-slate-500 uppercase font-bold tracking-widest border-b border-slate-800 pb-2 mb-2 flex justify-between">
+            <span>Subsystem Logs</span>
+            <span className="text-emerald-500/50 block">v4.9.1</span>
           </div>
-          <div className="h-24 overflow-hidden flex flex-col gap-2 text-[10px]">
-            <AnimatePresence>
-              {liveAlerts.map(alert => (
-                <motion.div 
-                  key={alert.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0 }}
-                  className={alert.text.includes('[ALERT]') || alert.text.includes('[RISK]') ? 'text-red-400' : alert.text.includes('[FINANCE]') ? 'text-gold' : 'text-slate-300'}
-                >
-                  {alert.text}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* BENTO GRID - GLOBAL METRICS */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
-            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Identities</div>
-            <div className="text-xl font-bold text-white">{nodes.length}</div>
-          </div>
-          <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
-            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Correlations</div>
-            <div className="text-xl font-bold text-white">{edges.length}</div>
-          </div>
-          <div className="col-span-2 bg-black/60 border border-slate-800 backdrop-blur-md p-3 flex flex-col items-center justify-center">
-            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Avg Confidence</div>
-            <div className="text-xl font-bold text-emerald-500">{avgConfidence}</div>
-          </div>
-        </div>
-
-        {/* INFRASTRUCTURE INTEL */}
-        <div className="bg-black/60 border border-slate-800 backdrop-blur-md p-4 text-xs">
-          <div className="flex justify-between mb-2">
-            <span className="text-slate-500">Tor Misconfigs</span>
-            <span className="text-red-400 font-bold">{misconfigs}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-500">SSL Clearnet Leaks</span>
-            <span className="text-red-400 font-bold">{sslLeaks}</span>
+          <div className="flex-1 overflow-y-auto space-y-1 pr-2 custom-scrollbar">
+            {terminalLogs.map(log => (
+              <div key={log.id} className={`${log.type === 'warn' ? 'text-red-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-300'}`}>
+                {">"} {log.msg}
+              </div>
+            ))}
+            <div ref={terminalEndRef} />
           </div>
         </div>
       </div>
@@ -349,22 +367,6 @@ export default function Dashboard({ onTerminate }) {
           <X className="w-4 h-4" />
           Terminate Link
         </button>
-      </div>
-
-      {/* TERMINAL / LOGGER */}
-      <div className="absolute bottom-6 left-6 w-80 h-32 bg-black/60 border border-slate-800 backdrop-blur-md p-4 flex flex-col text-[10px] z-40">
-        <div className="text-slate-500 uppercase font-bold tracking-widest border-b border-slate-800 pb-2 mb-2 flex justify-between">
-          <span>Subsystem Logs</span>
-          <span className="text-emerald-500/50 block">v4.9.1</span>
-        </div>
-        <div className="flex-1 overflow-y-auto space-y-1 pr-2 custom-scrollbar pointer-events-auto">
-          {terminalLogs.map(log => (
-            <div key={log.id} className={`${log.type === 'warn' ? 'text-red-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-300'}`}>
-              {">"} {log.msg}
-            </div>
-          ))}
-          <div ref={terminalEndRef} />
-        </div>
       </div>
 
       {/* DOSSIER PANEL (VENGEANCE UI) */}
