@@ -19,6 +19,9 @@ FROM nginx:alpine
 # Note: vite.config.js outputs to ../frontend which maps to /frontend in this container
 COPY --from=builder /frontend /usr/share/nginx/html
 
+# Copy custom NGINX configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose port 80 to the host
 EXPOSE 80
 

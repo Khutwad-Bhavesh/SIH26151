@@ -85,7 +85,7 @@ export default function Dashboard({ onTerminate }) {
     logToTerminal(`Computing stylometric embeddings...`, "normal")
 
     try {
-      const url = targetQuery ? `http://127.0.0.1:8000/api/graph?target=${encodeURIComponent(targetQuery)}` : "http://127.0.0.1:8000/api/graph"
+      const url = targetQuery ? `/api/graph?target=${encodeURIComponent(targetQuery)}` : "/api/graph"
       const res = await fetch(url)
       const result = await res.json()
 
@@ -259,7 +259,7 @@ export default function Dashboard({ onTerminate }) {
       {/* LEFT SIDEBAR */}
       <div className="absolute top-6 left-6 bottom-6 w-80 flex flex-col gap-4 pointer-events-none z-40">
         
-        <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0">
+        <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0 pointer-events-auto pr-1">
           {/* LOGO */}
           <div className="bg-black/40 border border-slate-800 p-4 flex items-center gap-3 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
             <div className="relative w-8 h-8">
