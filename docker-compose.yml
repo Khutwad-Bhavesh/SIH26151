@@ -14,11 +14,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./react-shell
     ports:
       - "80:80"
-    # Serve static files instantly during local development
-    volumes:
-      - ./frontend:/usr/share/nginx/html
     depends_on:
       - backend

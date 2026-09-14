@@ -85,7 +85,7 @@ export default function Dashboard({ onTerminate }) {
     logToTerminal(`Computing stylometric embeddings...`, "normal")
 
     try {
-      const url = targetQuery ? `/api/graph?target=${encodeURIComponent(targetQuery)}` : "/api/graph"
+      const url = targetQuery ? `http://127.0.0.1:8000/api/graph?target=${encodeURIComponent(targetQuery)}` : "http://127.0.0.1:8000/api/graph"
       const res = await fetch(url)
       const result = await res.json()
 
