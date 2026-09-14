@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from backend.analyzer import generate_graph_data
+from analyzer import generate_graph_data
 
 app = FastAPI(title="NTRO De-anonymization API")
 

@@ -141,7 +141,7 @@ export default function Dashboard({ onTerminate }) {
         throw new Error(result.message)
       }
     } catch (error) {
-      logToTerminal(`ERROR: TARGET [${targetQuery}] NOT IN DATABASE`, "warn")
+      logToTerminal(`ERROR: ${error.message || error}`, "warn")
     } finally {
       setIsScanning(false)
     }

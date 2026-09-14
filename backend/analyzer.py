@@ -10,9 +10,9 @@ warnings.filterwarnings('ignore')
 import warnings
 warnings.filterwarnings('ignore')
 
-from backend.connectors.elasticsearch_mock import ElasticsearchConnector
-from backend.ml.stylometry import StylometryEngine
-from backend.graph.builder import GraphBuilder
+from connectors.elasticsearch_mock import ElasticsearchConnector
+from ml.stylometry import StylometryEngine
+from graph.builder import GraphBuilder
 
 def generate_graph_data(target=None):
     """
