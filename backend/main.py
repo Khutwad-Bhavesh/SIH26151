@@ -25,6 +25,3 @@ def get_identity_graph(target: str = None):
         return {"status": "success", "data": graph_data}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-# Serve the frontend UI directly from the root path
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
