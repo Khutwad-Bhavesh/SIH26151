@@ -7,3 +7,7 @@ env/
 venv/
 *.log
 graph_output.json
+
+# Agent/Skills files
+.agents/
+skills-lock.json
