@@ -52,8 +52,8 @@ function App() {
   }, [appState])
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black scanlines">
-      
+    <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-slate-200 font-sans antialiased">
+
       {/* 
         ========================================================================
         STATE: NATIVE DASHBOARD (ADHD Headless Architecture)
@@ -76,10 +76,10 @@ function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 z-10 bg-base flex items-center justify-center"
+            className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/50 to-slate-200"
           >
             
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 pointer-events-none"></div>
+            <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,0,0,0.1) 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
 
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
@@ -88,35 +88,35 @@ function App() {
               className="relative z-20 flex flex-col items-center gap-12"
             >
               <motion.div 
-                initial={{ letterSpacing: '0.8em', opacity: 0, scale: 0.9 }}
-                animate={{ letterSpacing: '0.2em', opacity: 1, scale: 1 }}
+                initial={{ letterSpacing: '0.4em', opacity: 0, scale: 0.95 }}
+                animate={{ letterSpacing: '0.1em', opacity: 1, scale: 1 }}
                 transition={{ duration: 2, ease: "easeOut" }}
                 className="flex flex-col items-center"
               >
-                <h1 className="text-7xl md:text-9xl font-black text-white uppercase" style={{ textShadow: '0 0 40px rgba(255,255,255,0.3), 0 0 100px rgba(34,197,94,0.2)' }}>
+                <h1 className="text-7xl md:text-9xl font-semibold text-slate-800 tracking-tight drop-shadow-sm">
                   A.T.L.A.S.
                 </h1>
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5, duration: 1 }}
-                  className="text-[#E8A33D] font-mono text-xs md:text-sm tracking-[0.5em] uppercase mt-6 flex items-center gap-4 opacity-90"
+                  className="text-slate-500 font-medium text-sm tracking-wide mt-6 flex items-center gap-4"
                 >
-                  <span className="w-8 md:w-16 h-[1px] bg-[#E8A33D]/50"></span>
+                  <span className="w-8 md:w-16 h-[1px] bg-slate-300"></span>
                   Advanced Threat & Link Analysis System
-                  <span className="w-8 md:w-16 h-[1px] bg-[#E8A33D]/50"></span>
+                  <span className="w-8 md:w-16 h-[1px] bg-slate-300"></span>
                 </motion.div>
               </motion.div>
               
               <motion.button 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2.5, duration: 1 }}
                 onClick={handleEnterDashboard}
-                className="px-8 py-4 border border-emerald-500/50 text-emerald-500 font-mono tracking-[0.3em] uppercase text-sm hover:bg-emerald-500 hover:text-black transition-all duration-300 flex items-center gap-3 group shadow-[0_0_15px_rgba(34,197,94,0.1)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] backdrop-blur-sm"
+                className="px-10 py-4 bg-white/80 border border-slate-200/60 text-slate-800 font-semibold rounded-full hover:bg-white hover:scale-105 transition-all duration-300 flex items-center gap-3 group shadow-[0_8px_25px_rgba(148,163,184,0.4)] hover:shadow-[0_12px_35px_rgba(148,163,184,0.5)] backdrop-blur-xl"
               >
-                <Terminal className="w-5 h-5 group-hover:animate-pulse" />
-                Initiate Sequence
+                <Terminal className="w-5 h-5 text-blue-600 group-hover:text-blue-700 drop-shadow-[0_2px_8px_rgba(148,163,184,0.5)]" />
+                Start Workspace
               </motion.button>
             </motion.div>
           </motion.div>
