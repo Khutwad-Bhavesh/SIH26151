@@ -4,6 +4,7 @@
   --color-gold: #E8A33D;
   --color-gold-glow: rgba(232, 163, 61, 0.4);
   --color-bg-light: #f8fafc;
+  --variant-dark: (&:where(.dark, .dark *));
 }
 
 body, html, #root {
