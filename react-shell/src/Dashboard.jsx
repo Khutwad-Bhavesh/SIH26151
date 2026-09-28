@@ -295,11 +295,7 @@ export default function Dashboard({ onTerminate }) {
   }
 
   return (
-    <div className="w-full h-full relative bg-gradient-to-br from-slate-50 via-blue-50/50 to-slate-200 text-slate-900 overflow-hidden font-sans select-none antialiased">
-
-
-      {/* BACKGROUND GRID */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+    <div className="w-full h-full relative text-slate-900 overflow-hidden font-sans select-none antialiased" style={{background: 'radial-gradient(125% 125% at 50% 10%, #fff 40%, #6633ee 100%)'}}>
       
       {/* 
         ========================================
@@ -375,32 +371,140 @@ export default function Dashboard({ onTerminate }) {
       */}
 
       {/* LEFT SIDEBAR */}
-      <div className="absolute top-6 left-6 bottom-6 w-80 flex flex-col gap-4 pointer-events-none z-40">
+      <div className="absolute top-6 left-6 bottom-6 w-80 flex flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-xl z-40 pointer-events-auto overflow-hidden transition-colors duration-500">
         
-        <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar min-h-0 pointer-events-auto pr-1">
+        <div className="flex flex-col gap-6 overflow-y-auto custom-scrollbar flex-1 p-5">
           {/* LOGO */}
-          <div className="bg-white/60 backdrop-blur-2xl border border-slate-200/60 p-5 rounded-3xl flex items-center gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-            <div className="relative w-10 h-10 bg-white rounded-2xl shadow-sm flex items-center justify-center p-2">
+          <div className="flex items-center gap-4">
+            <div className="relative w-10 h-10 bg-white dark:bg-slate-800 rounded-2xl shadow-sm flex items-center justify-center p-2 border border-slate-100 dark:border-slate-700">
               <img src="/source_image.png" alt="A.T.L.A.S." className="w-full h-full object-contain drop-shadow-sm" />
             </div>
             <div>
-              <div className="text-slate-800 font-semibold text-base tracking-tight">A.T.L.A.S.</div>
-              <div className="text-xs text-slate-500 font-medium">Intelligence Command</div>
+              <div className="text-slate-800 dark:text-white font-semibold text-base tracking-tight">A.T.L.A.S.</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Intelligence Command</div>
             </div>
           </div>
 
+          <div className="h-px w-full bg-slate-200/60 dark:bg-slate-800" />
+
           {/* SEARCH BAR */}
-          <div className="bg-white/60 backdrop-blur-2xl border border-slate-200/60 p-5 rounded-3xl pointer-events-auto flex-shrink-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-            <div className="text-xs text-slate-500 mb-3 font-medium">Analysis Controls</div>
+          <div className="flex-shrink-0">
+            <div className="text-xs text-slate-500 dark:text-slate-400 mb-3 font-medium">Analysis Controls</div>
             <div className="relative group mb-4">
               <input 
                 type="text" 
                 placeholder="Enter Target Alias..." 
                 value={targetQuery}
                 onChange={e => setTargetQuery(e.target.value)}
+                className="w-full bg-white/50 dark:bg-slate-950/50 text-slate-800 dark:text-slate-200 text-sm px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all border border-slate-200 dark:border-slate-800 shadow-inner"
+              />
+              <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-emerald-600 dark:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-xl transition-colors">
+                <Search className="w-4 h-4 drop-shadow-sm" />
+              </button>
+            </div>
+            
+            <button 
+              onClick={runScan}
+              disabled={isScanning}
+              className="w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white transition-all py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2 shadow-md disabled:opacity-50"
+            >
+              {isScanning ? <Activity className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+              {isScanning ? 'Scanning Network...' : 'Initialize OSINT Scan'}
+            </button>
+          </div>
+
+          {/* ADVANCED ACTIONS (SWARM & PROXIMITY) */}
+          <div className="flex flex-col gap-3 flex-shrink-0">
+            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1 font-medium">Offensive Operations</div>
+            <button 
+              onClick={deploySwarm}
+              disabled={swarmActive}
+              className="w-full bg-blue-50/50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50 transition-all py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2 shadow-sm disabled:opacity-50"
+            >
+              <Crosshair className="w-4 h-4" />
+              Deploy Recon Swarm
+            </button>
+            <button 
+              onClick={deployProximity}
+              disabled={proximityActive}
+              className="w-full bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/50 transition-all py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2 shadow-sm disabled:opacity-50"
+            >
+              <Radar className="w-4 h-4" />
+              Execute Proximity Payload
+            </button>
+          </div>
+
+          {/* LIVE THREAT FEED */}
+          <div className="flex-shrink-0 bg-white/40 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="text-xs text-emerald-700 dark:text-emerald-400 mb-3 font-semibold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live Threat Feed
+            </div>
+            <div className="h-24 overflow-hidden flex flex-col gap-2 text-xs">
+              <AnimatePresence>
+                {liveAlerts.map(alert => (
+                  <motion.div 
+                    key={alert.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={alert.text.includes('[ALERT]') || alert.text.includes('[RISK]') ? 'text-red-600 dark:text-red-400 font-medium' : alert.text.includes('[FINANCE]') ? 'text-amber-600 dark:text-amber-400 font-medium' : 'text-slate-600 dark:text-slate-300'}
+                  >
+                    {alert.text}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* BENTO GRID - GLOBAL METRICS */}
+          <div className="grid grid-cols-2 gap-3 flex-shrink-0">
+            <div className="bg-white/40 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex flex-col items-center justify-center">
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">Identities</div>
+              <div className="text-2xl font-bold text-slate-800 dark:text-white">{nodes.length}</div>
+            </div>
+            <div className="bg-white/40 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex flex-col items-center justify-center">
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">Correlations</div>
+              <div className="text-2xl font-bold text-slate-800 dark:text-white">{edges.length}</div>
+            </div>
+            <div className="col-span-2 bg-gradient-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/20 border border-emerald-200/60 dark:border-emerald-800/50 p-4 rounded-2xl flex flex-col items-center justify-center">
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">Average Confidence</div>
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{avgConfidence}</div>
+            </div>
+          </div>
+
+          {/* INFRASTRUCTURE INTEL */}
+          <div className="text-sm flex-shrink-0 bg-white/40 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="flex justify-between mb-3">
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Tor Misconfigs</span>
+              <span className="text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md">{misconfigs}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500 dark:text-slate-400 font-medium">SSL Clearnet Leaks</span>
+              <span className="text-red-600 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md">{sslLeaks}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* TERMINAL / LOGGER */}
+        <div className="flex-shrink-0 min-h-[140px] max-h-[200px] bg-slate-100/50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 p-5 flex flex-col text-xs">
+          <div className="text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 pb-2 mb-2 flex justify-between items-center">
+            <span>System Log</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal text-[10px] bg-white/50 dark:bg-slate-800 px-2 py-1 rounded-full">v4.9.1</span>
+          </div>
+          <div className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar font-mono text-[11px]">
+            {terminalLogs.map(log => (
+              <div key={log.id} className={`${log.type === 'warn' ? 'text-red-600 dark:text-red-400' : log.type === 'success' ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                {">"} {log.msg}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* RIGHT SIDEBAR (Dossier Panel) */}
-      <div className="w-[380px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-l border-white/50 dark:border-slate-800 flex flex-col z-10 shadow-xl dark:shadow-none relative transition-colors duration-500">
-        <div id="dossier-content" className="p-0 pt-16 flex-1 overflow-y-auto custom-scrollbar">
+      <div className="absolute top-6 right-6 bottom-6 w-[360px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/60 dark:border-slate-800 rounded-3xl flex flex-col z-40 shadow-xl pointer-events-auto overflow-hidden transition-colors duration-500">
+        <div id="dossier-content" className="p-0 pt-4 flex-1 overflow-y-auto custom-scrollbar">
           
           {selectedNode ? (
             <motion.div 
@@ -659,6 +763,7 @@ export default function Dashboard({ onTerminate }) {
                     <p className="mt-8 text-slate-500 dark:text-slate-400 text-xs">Ledger integration active. Tracing heuristic: High-risk mixing service.</p>
                   </div>
                 )}
+              </div>
               </div>
             </motion.div>
           </motion.div>

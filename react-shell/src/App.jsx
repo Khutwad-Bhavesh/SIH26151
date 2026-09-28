@@ -52,7 +52,7 @@ function App() {
   }, [appState])
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-slate-200 font-sans antialiased">
+    <div className="w-full h-full relative overflow-hidden font-sans antialiased">
 
       {/* 
         ========================================================================
